@@ -160,19 +160,45 @@
                 const preview = document.getElementById('preview');
                 preview.innerHTML = '';
                 
-                let hasContent = false;
+                if (data.blocks.length === 0) {
+                    alert('⚠️ Редактор пуст');
+                    return;
+                }
+                
                 data.blocks.forEach(block => {
-                    if (block.type === 'raw' && block.data.html) {
-                        preview.innerHTML += block.data.html;
-                        hasContent = true;
+                    switch(block.type) {
+                        case 'header':
+                            preview.innerHTML += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+                            break;
+                        case 'paragraph':
+                            preview.innerHTML += `<p>${block.data.text}</p>`;
+                            break;
+                        case 'list':
+                            const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
+                            preview.innerHTML += `<${tag}>${block.data.items.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
+                            break;
+                        case 'checklist':
+                            preview.innerHTML += `<ul>${block.data.items.map(i => `<li><input type="checkbox" ${i.checked ? 'checked' : ''}> ${i.text}</li>`).join('')}</ul>`;
+                            break;
+                        case 'quote':
+                            preview.innerHTML += `<blockquote>${block.data.text}<cite>${block.data.caption}</cite></blockquote>`;
+                            break;
+                        case 'code':
+                            preview.innerHTML += `<pre><code>${block.data.code}</code></pre>`;
+                            break;
+                        case 'delimiter':
+                            preview.innerHTML += '<hr>';
+                            break;
+                        case 'table':
+                            preview.innerHTML += `<table border="1">${block.data.content.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</table>`;
+                            break;
+                        case 'raw':
+                            preview.innerHTML += block.data.html;
+                            break;
                     }
                 });
                 
-                if (hasContent) {
-                    preview.style.display = 'block';
-                } else {
-                    alert('⚠️ Нет HTML контента для предпросмотра');
-                }
+                preview.style.display = 'block';
             } catch (error) {
                 console.error('Ошибка:', error);
                 alert('❌ Ошибка: ' + error.message);
