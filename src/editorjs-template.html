@@ -68,6 +68,7 @@
 
     <!-- Editor.js CDN - РАБОЧИЕ ВЕРСИИ -->
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.28.2/dist/editorjs.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3/dist/bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.7.0/dist/bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.8.0/dist/bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@1.5.0/dist/bundle.js"></script>
@@ -82,11 +83,13 @@
         
         // Инициализация редактора
         window.addEventListener('load', function() {
+            localStorage.removeItem('editorjs-data');
             setTimeout(() => {
                 editor = new EditorJS({
                     holder: 'editorjs',
                     placeholder: 'Начните писать...',
                     tools: {
+                        paragraph: Paragraph,
                         header: Header,
                         list: List,
                         checklist: Checklist,
@@ -115,6 +118,7 @@
                 editor = new EditorJS({
                     holder: 'editorjs',
                     tools: {
+                        paragraph: Paragraph,
                         header: Header,
                         list: List,
                         checklist: Checklist,
@@ -138,6 +142,7 @@
                 editor = new EditorJS({
                     holder: 'editorjs',
                     tools: {
+                        paragraph: Paragraph,
                         header: Header,
                         list: List,
                         checklist: Checklist,
