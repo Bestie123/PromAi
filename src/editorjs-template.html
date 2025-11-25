@@ -160,63 +160,53 @@
         
         // Предпросмотр HTML
         async function showPreview() {
-            console.log('Функция showPreview вызвана');
-            console.log('Editor:', editor);
-            
-            if (!editor) {
-                alert('❌ Редактор не инициализирован');
-                return;
-            }
-            
             try {
                 const data = await editor.save();
-                console.log('Данные редактора:', data);
-                
                 const preview = document.getElementById('preview');
-                preview.innerHTML = '';
                 
                 if (!data.blocks || data.blocks.length === 0) {
-                    alert('⚠️ Редактор пуст');
+                    preview.innerHTML = '<p style="color: #999;">📝 Редактор пуст. Добавьте контент.</p>';
+                    preview.style.display = 'block';
                     return;
                 }
                 
+                let html = '';
                 data.blocks.forEach(block => {
-                    console.log('Блок:', block.type, block.data);
                     switch(block.type) {
                         case 'header':
-                            preview.innerHTML += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+                            html += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
                             break;
                         case 'paragraph':
-                            preview.innerHTML += `<p>${block.data.text}</p>`;
+                            html += `<p>${block.data.text}</p>`;
                             break;
                         case 'list':
                             const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
-                            preview.innerHTML += `<${tag}>${block.data.items.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
+                            html += `<${tag}>${block.data.items.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
                             break;
                         case 'checklist':
-                            preview.innerHTML += `<ul>${block.data.items.map(i => `<li><input type="checkbox" ${i.checked ? 'checked' : ''}> ${i.text}</li>`).join('')}</ul>`;
+                            html += `<ul>${block.data.items.map(i => `<li><input type="checkbox" ${i.checked ? 'checked' : ''}> ${i.text}</li>`).join('')}</ul>`;
                             break;
                         case 'quote':
-                            preview.innerHTML += `<blockquote>${block.data.text}<cite>${block.data.caption}</cite></blockquote>`;
+                            html += `<blockquote>${block.data.text}<cite>${block.data.caption || ''}</cite></blockquote>`;
                             break;
                         case 'code':
-                            preview.innerHTML += `<pre><code>${block.data.code}</code></pre>`;
+                            html += `<pre><code>${block.data.code}</code></pre>`;
                             break;
                         case 'delimiter':
-                            preview.innerHTML += '<hr>';
+                            html += '<hr>';
                             break;
                         case 'table':
-                            preview.innerHTML += `<table border="1">${block.data.content.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</table>`;
+                            html += `<table border="1">${block.data.content.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</table>`;
                             break;
                         case 'raw':
-                            preview.innerHTML += block.data.html;
+                            html += block.data.html;
                             break;
                     }
                 });
                 
+                preview.innerHTML = html;
                 preview.style.display = 'block';
             } catch (error) {
-                console.error('Ошибка:', error);
                 alert('❌ Ошибка: ' + error.message);
             }
         }
