@@ -3,5 +3,9 @@
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000
+  "files.autoSaveDelay": 1000,
+    "gitdoc.enabled": true,
+  "gitdoc.autoCommitDelay": 30000,
+  "gitdoc.commitMessageFormat": "docs: auto-save ${date}",
+  "gitdoc.commitValidationLevel": "none"
 }
