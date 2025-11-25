@@ -160,6 +160,14 @@
         
         // Предпросмотр HTML
         async function showPreview() {
+            console.log('Функция showPreview вызвана');
+            console.log('Editor:', editor);
+            
+            if (!editor) {
+                alert('❌ Редактор не инициализирован');
+                return;
+            }
+            
             try {
                 const data = await editor.save();
                 console.log('Данные редактора:', data);
