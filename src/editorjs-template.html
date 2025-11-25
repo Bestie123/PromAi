@@ -204,7 +204,7 @@
                     }
                 });
                 
-                preview.innerHTML = html;
+                preview.innerHTML = html || '<p style="color: #999;">📝 Контент есть, но HTML пустой</p>';
                 preview.style.display = 'block';
             } catch (error) {
                 alert('❌ Ошибка: ' + error.message);
