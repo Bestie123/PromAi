@@ -81,6 +81,32 @@
                 holder: 'editorjs',
                 placeholder: 'Начните писать...',
                 tools: {
+                    header: {
+                        class: Header,
+                        config: {
+                            levels: [1, 2, 3, 4, 5, 6],
+                            defaultLevel: 2
+                        }
+                    },
+                    list: {
+                        class: List,
+                        inlineToolbar: true
+                    },
+                    checklist: {
+                        class: Checklist,
+                        inlineToolbar: true
+                    },
+                    quote: {
+                        class: Quote,
+                        inlineToolbar: true
+                    },
+                    code: CodeTool,
+                    delimiter: Delimiter,
+                    table: {
+                        class: Table,
+                        inlineToolbar: true
+                    },
+                    image: SimpleImage,
                     raw: RawTool
                 }
             });
@@ -100,7 +126,17 @@
                 editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    tools: { raw: RawTool },
+                    tools: {
+                        header: { class: Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
+                        list: { class: List, inlineToolbar: true },
+                        checklist: { class: Checklist, inlineToolbar: true },
+                        quote: { class: Quote, inlineToolbar: true },
+                        code: CodeTool,
+                        delimiter: Delimiter,
+                        table: { class: Table, inlineToolbar: true },
+                        image: SimpleImage,
+                        raw: RawTool
+                    },
                     data: JSON.parse(stored)
                 });
                 alert('✅ Данные загружены!');
@@ -112,7 +148,20 @@
         function clearData() {
             if (confirm('Очистить редактор?')) {
                 editor.destroy();
-                editor = new EditorJS({ holder: 'editorjs', tools: { raw: RawTool } });
+                editor = new EditorJS({
+                    holder: 'editorjs',
+                    tools: {
+                        header: { class: Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
+                        list: { class: List, inlineToolbar: true },
+                        checklist: { class: Checklist, inlineToolbar: true },
+                        quote: { class: Quote, inlineToolbar: true },
+                        code: CodeTool,
+                        delimiter: Delimiter,
+                        table: { class: Table, inlineToolbar: true },
+                        image: SimpleImage,
+                        raw: RawTool
+                    }
+                });
                 localStorage.removeItem('editorjs-data');
                 document.getElementById('output').style.display = 'none';
                 document.getElementById('preview').style.display = 'none';
