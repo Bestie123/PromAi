@@ -63,14 +63,6 @@
 
     <!-- Editor.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/raw@latest"></script>
 
     <script>
@@ -80,20 +72,12 @@
             setTimeout(() => {
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    placeholder: 'Начните писать...',
+                    placeholder: 'Вставьте HTML код...',
                     tools: {
-                        header: { class: window.Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
-                        list: { class: window.List, inlineToolbar: true },
-                        checklist: { class: window.Checklist, inlineToolbar: true },
-                        quote: { class: window.Quote, inlineToolbar: true },
-                        code: window.CodeTool,
-                        delimiter: window.Delimiter,
-                        table: { class: window.Table, inlineToolbar: true },
-                        image: window.SimpleImage,
                         raw: window.RawTool
                     }
                 });
-            }, 1000);
+            }, 500);
         });
         
         async function saveData() {
@@ -110,17 +94,7 @@
                 editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    tools: {
-                        header: { class: window.Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
-                        list: { class: window.List, inlineToolbar: true },
-                        checklist: { class: window.Checklist, inlineToolbar: true },
-                        quote: { class: window.Quote, inlineToolbar: true },
-                        code: window.CodeTool,
-                        delimiter: window.Delimiter,
-                        table: { class: window.Table, inlineToolbar: true },
-                        image: window.SimpleImage,
-                        raw: window.RawTool
-                    },
+                    tools: { raw: window.RawTool },
                     data: JSON.parse(stored)
                 });
                 alert('✅ Данные загружены!');
@@ -134,17 +108,7 @@
                 editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    tools: {
-                        header: { class: window.Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
-                        list: { class: window.List, inlineToolbar: true },
-                        checklist: { class: window.Checklist, inlineToolbar: true },
-                        quote: { class: window.Quote, inlineToolbar: true },
-                        code: window.CodeTool,
-                        delimiter: window.Delimiter,
-                        table: { class: window.Table, inlineToolbar: true },
-                        image: window.SimpleImage,
-                        raw: window.RawTool
-                    }
+                    tools: { raw: window.RawTool }
                 });
                 localStorage.removeItem('editorjs-data');
                 document.getElementById('output').style.display = 'none';
