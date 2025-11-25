@@ -139,6 +139,7 @@
         // Очистка редактора
         function clearData() {
             if (confirm('Очистить редактор?')) {
+                editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
                     tools: {
