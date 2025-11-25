@@ -79,38 +79,12 @@
         window.addEventListener('load', function() {
             setTimeout(() => {
                 editor = new EditorJS({
-                holder: 'editorjs',
-                placeholder: 'Начните писать...',
-                tools: {
-                    header: {
-                        class: Header,
-                        config: {
-                            levels: [1, 2, 3, 4, 5, 6],
-                            defaultLevel: 2
-                        }
-                    },
-                    list: {
-                        class: List,
-                        inlineToolbar: true
-                    },
-                    checklist: {
-                        class: Checklist,
-                        inlineToolbar: true
-                    },
-                    quote: {
-                        class: Quote,
-                        inlineToolbar: true
-                    },
-                    code: CodeTool,
-                    delimiter: Delimiter,
-                    table: {
-                        class: Table,
-                        inlineToolbar: true
-                    },
-                    image: SimpleImage,
-                    raw: RawTool
-                }
-            });
+                    holder: 'editorjs',
+                    placeholder: 'Начните писать...',
+                    tools: {
+                        raw: RawTool
+                    }
+                });
             }, 500);
         });
         
@@ -128,17 +102,7 @@
                 editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    tools: {
-                        header: { class: Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
-                        list: { class: List, inlineToolbar: true },
-                        checklist: { class: Checklist, inlineToolbar: true },
-                        quote: { class: Quote, inlineToolbar: true },
-                        code: CodeTool,
-                        delimiter: Delimiter,
-                        table: { class: Table, inlineToolbar: true },
-                        image: SimpleImage,
-                        raw: RawTool
-                    },
+                    tools: { raw: RawTool },
                     data: JSON.parse(stored)
                 });
                 alert('✅ Данные загружены!');
@@ -152,17 +116,7 @@
                 editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
-                    tools: {
-                        header: { class: Header, config: { levels: [1,2,3,4,5,6], defaultLevel: 2 } },
-                        list: { class: List, inlineToolbar: true },
-                        checklist: { class: Checklist, inlineToolbar: true },
-                        quote: { class: Quote, inlineToolbar: true },
-                        code: CodeTool,
-                        delimiter: Delimiter,
-                        table: { class: Table, inlineToolbar: true },
-                        image: SimpleImage,
-                        raw: RawTool
-                    }
+                    tools: { raw: RawTool }
                 });
                 localStorage.removeItem('editorjs-data');
                 document.getElementById('output').style.display = 'none';
