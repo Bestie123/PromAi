@@ -157,15 +157,18 @@
         async function showPreview() {
             try {
                 const data = await editor.save();
+                console.log('Данные редактора:', data);
+                
                 const preview = document.getElementById('preview');
                 preview.innerHTML = '';
                 
-                if (data.blocks.length === 0) {
+                if (!data.blocks || data.blocks.length === 0) {
                     alert('⚠️ Редактор пуст');
                     return;
                 }
                 
                 data.blocks.forEach(block => {
+                    console.log('Блок:', block.type, block.data);
                     switch(block.type) {
                         case 'header':
                             preview.innerHTML += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
