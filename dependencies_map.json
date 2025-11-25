@@ -1,0 +1,40 @@
+{
+  "projectId": "PROJECT_TechKnowledgeBase",
+  "version": "2.6.0",
+  "lastUpdated": "2024-01-15T21:00:00Z",
+  "nodes": [
+    {"id": "MODULE_DataManager_VER_1.0", "type": "module", "functions": 17, "dependencies": [], "dependents": ["MODULE_AccordionManager_VER_1.0", "MODULE_ChecklistManager_VER_1.0", "MODULE_AuthManager_VER_1.0", "MODULE_KnowledgeManager_VER_1.0"]},
+    {"id": "MODULE_UIManager_VER_1.0", "type": "module", "functions": 6, "dependencies": [], "dependents": ["MODULE_ChecklistManager_VER_1.0", "MODULE_AuthManager_VER_1.0", "MODULE_KnowledgeManager_VER_1.0", "MODULE_KnowledgeEditor_VER_1.0"]},
+    {"id": "MODULE_AccordionManager_VER_1.0", "type": "module", "functions": 9, "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"], "dependents": []},
+    {"id": "MODULE_DOMFactory_VER_1.0", "type": "module", "functions": 2, "dependencies": [], "dependents": ["MODULE_AccordionManager_VER_1.0", "MODULE_ChecklistManager_VER_1.0", "MODULE_KnowledgeManager_VER_1.0", "MODULE_KnowledgeEditor_VER_1.0"]},
+    {"id": "MODULE_ChecklistManager_VER_1.0", "type": "module", "functions": 11, "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"], "dependents": []},
+    {"id": "MODULE_AuthManager_VER_1.0", "type": "module", "functions": 19, "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0"], "dependents": []},
+    {"id": "MODULE_KnowledgeManager_VER_1.0", "type": "module", "functions": 25, "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"], "dependents": ["MODULE_KnowledgeEditor_VER_1.0"]},
+    {"id": "MODULE_KnowledgeEditor_VER_1.0", "type": "module", "functions": 43, "dependencies": ["MODULE_KnowledgeManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"], "dependents": []},
+    {"id": "MODULE_Inspector_VER_1.0", "type": "module", "functions": 18, "dependencies": ["MODULE_FunctionTracer_VER_1.0"], "dependents": []},
+    {"id": "MODULE_FunctionTracer_VER_1.0", "type": "module", "functions": 10, "dependencies": [], "dependents": ["MODULE_Inspector_VER_1.0"]},
+    {"id": "MODULE_DependencyValidator_VER_1.0", "type": "module", "functions": 10, "dependencies": [], "dependents": []}
+  ],
+  "edges": [
+    {"from": "MODULE_AccordionManager_VER_1.0", "to": "MODULE_DataManager_VER_1.0", "type": "depends", "strength": "strong"},
+    {"from": "MODULE_ChecklistManager_VER_1.0", "to": "MODULE_DataManager_VER_1.0", "type": "depends", "strength": "strong"},
+    {"from": "MODULE_ChecklistManager_VER_1.0", "to": "MODULE_UIManager_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_ChecklistManager_VER_1.0", "to": "MODULE_DOMFactory_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_AuthManager_VER_1.0", "to": "MODULE_DataManager_VER_1.0", "type": "depends", "strength": "strong"},
+    {"from": "MODULE_AuthManager_VER_1.0", "to": "MODULE_UIManager_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_KnowledgeManager_VER_1.0", "to": "MODULE_DataManager_VER_1.0", "type": "depends", "strength": "strong"},
+    {"from": "MODULE_KnowledgeManager_VER_1.0", "to": "MODULE_UIManager_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_KnowledgeManager_VER_1.0", "to": "MODULE_DOMFactory_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_KnowledgeEditor_VER_1.0", "to": "MODULE_KnowledgeManager_VER_1.0", "type": "depends", "strength": "strong"},
+    {"from": "MODULE_KnowledgeEditor_VER_1.0", "to": "MODULE_UIManager_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_KnowledgeEditor_VER_1.0", "to": "MODULE_DOMFactory_VER_1.0", "type": "depends", "strength": "medium"},
+    {"from": "MODULE_Inspector_VER_1.0", "to": "MODULE_FunctionTracer_VER_1.0", "type": "depends", "strength": "medium"}
+  ],
+  "stats": {
+    "totalModules": 11,
+    "totalFunctions": 214,
+    "totalDependencies": 14,
+    "maxDepth": 4,
+    "cyclicDependencies": 0
+  }
+}

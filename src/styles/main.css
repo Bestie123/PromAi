@@ -1,0 +1,503 @@
+/* Базовые стили */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.auth-section {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ffeaa7;
+}
+
+.auth-status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+.auth-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.auth-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+button.delete {
+    background: #dc3545;
+}
+
+button.delete:hover {
+    background: #c82333;
+}
+
+button.success {
+    background: #28a745;
+}
+
+button.success:hover {
+    background: #218838;
+}
+
+button.warning {
+    background: #ffc107;
+    color: black;
+}
+
+button.warning:hover {
+    background: #e0a800;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1001;
+}
+
+.success { background: #28a745; }
+.error { background: #dc3545; }
+.warning { background: #ffc107; color: black; }
+
+.accordion-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    min-height: 500px;
+    overflow: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Аккордеон стили */
+.accordion {
+    width: 100%;
+}
+
+.accordion-item {
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+    user-select: none;
+}
+
+.accordion-header:hover {
+    background: #e9ecef;
+}
+
+.accordion-header.category {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+}
+
+.accordion-header.technology {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+}
+
+.accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.accordion-icon {
+    font-size: 1.2em;
+}
+
+.accordion-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: white;
+}
+
+.accordion-content.expanded {
+    max-height: 5000px;
+}
+
+.accordion-child {
+    margin-left: 30px;
+    border-left: 2px solid #e9ecef;
+}
+
+.accordion-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: 10px;
+}
+
+.accordion-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accordion-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.accordion-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 5px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #20c997;
+    transition: width 0.3s ease;
+}
+
+.status-planned { color: #6c757d; }
+.status-in-progress { color: #fd7e14; }
+.status-completed { color: #198754; }
+
+.checklist-indicator {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+/* Встроенный чек-лист */
+.inline-checklist {
+    padding: 15px;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.inline-checklist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.inline-checklist-title {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-checklist-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.inline-checklist-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.inline-checklist-content.expanded {
+    max-height: 1000px;
+}
+
+.inline-checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.inline-checklist-item:last-child {
+    border-bottom: none;
+}
+
+.inline-checklist-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.inline-checklist-item-text {
+    flex-grow: 1;
+    font-size: 0.9em;
+}
+
+.inline-checklist-item.completed .inline-checklist-item-text {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.inline-checklist-stats {
+    padding: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-top: 10px;
+}
+
+.inline-checklist-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.technology-checkbox {
+    margin-left: 10px;
+}
+
+.technology-checkbox input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.sync-status {
+    margin-top: 10px;
+    padding: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.checklist-section {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.checklist-item-text {
+    flex-grow: 1;
+}
+
+.checklist-item.completed .checklist-item-text {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.checklist-stats {
+    margin-top: 10px;
+    padding: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.checklist-actions {
+    margin-top: 10px;
+}
+
+.checklist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checklist-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+button.auto-save-enabled {
+    background: #28a745;
+}
+
+button.auto-save-enabled:hover {
+    background: #218838;
+}
+
+button.auto-save-disabled {
+    background: #6c757d;
+}
+
+button.auto-save-disabled:hover {
+    background: #5a6268;
+}
+
+.auto-save-status {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.auto-save-on {
+    background: #d4edda;
+    color: #155724;
+}
+
+.auto-save-off {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.path-display {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+.parent-select-item {
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #f8f9fa;
+}
+
+.parent-select-item:hover {
+    background: #e9ecef;
+}
+
+.parent-select-item.selected {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.knowledge-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-left: 10px;
+}

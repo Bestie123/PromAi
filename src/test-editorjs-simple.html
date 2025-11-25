@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Editor.js Simple Test</title>
+</head>
+<body>
+    <h1>Editor.js Test</h1>
+    <div id="editorjs" style="border: 1px solid #ccc; padding: 20px; min-height: 300px;"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    
+    <script>
+        const editor = new EditorJS({
+            holder: 'editorjs',
+            placeholder: 'Начните писать...'
+        });
+    </script>
+</body>
+</html>

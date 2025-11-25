@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor.js Prototype</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/knowledge.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .editorjs-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #editorjs {
+            min-height: 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .ce-block__content, .ce-toolbar__content {
+            max-width: 100%;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+        }
+        .controls button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="editorjs-container">
+        <h1>📝 Editor.js Prototype</h1>
+        <div id="editorjs"></div>
+        <div class="controls">
+            <button onclick="saveData()">💾 Сохранить</button>
+            <button onclick="loadData()">📂 Загрузить</button>
+            <button onclick="clearData()">🗑️ Очистить</button>
+            <button onclick="showPreview()">👁️ Предпросмотр</button>
+        </div>
+        <div id="preview" style="margin-top: 20px; padding: 20px; background: white; border: 2px solid #4CAF50; border-radius: 4px; display: none;"></div>
+        <pre id="output" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 4px; display: none;"></pre>
+    </div>
+
+    <!-- Editor.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/raw@latest"></script>
+
+    <script>
+        let editor;
+        
+        window.addEventListener('load', function() {
+            editor = new EditorJS({
+                holder: 'editorjs',
+                placeholder: 'Начните писать...',
+                tools: {
+                    raw: RawTool
+                }
+            });
+        });
+        
+        async function saveData() {
+            const data = await editor.save();
+            localStorage.setItem('editorjs-data', JSON.stringify(data));
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            alert('✅ Данные сохранены!');
+        }
+        
+        async function loadData() {
+            const stored = localStorage.getItem('editorjs-data');
+            if (stored) {
+                editor.destroy();
+                editor = new EditorJS({
+                    holder: 'editorjs',
+                    tools: { raw: RawTool },
+                    data: JSON.parse(stored)
+                });
+                alert('✅ Данные загружены!');
+            } else {
+                alert('⚠️ Нет сохраненных данных');
+            }
+        }
+        
+        function clearData() {
+            if (confirm('Очистить редактор?')) {
+                editor.destroy();
+                editor = new EditorJS({ holder: 'editorjs', tools: { raw: RawTool } });
+                localStorage.removeItem('editorjs-data');
+                document.getElementById('output').style.display = 'none';
+                document.getElementById('preview').style.display = 'none';
+            }
+        }
+        
+        async function showPreview() {
+            try {
+                if (!editor || !editor.save) {
+                    alert('⚠️ Редактор не готов');
+                    return;
+                }
+                
+                const data = await editor.save();
+                const preview = document.getElementById('preview');
+                preview.innerHTML = '';
+                
+                let hasContent = false;
+                data.blocks.forEach(block => {
+                    if (block.type === 'raw' && block.data.html) {
+                        preview.innerHTML += block.data.html;
+                        hasContent = true;
+                    }
+                });
+                
+                if (hasContent) {
+                    preview.style.display = 'block';
+                } else {
+                    alert('⚠️ Нет HTML контента для предпросмотра');
+                }
+            } catch (error) {
+                console.error('Ошибка предпросмотра:', error);
+                alert('❌ Ошибка: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

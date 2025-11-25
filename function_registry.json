@@ -1,0 +1,530 @@
+{
+  "projectId": "PROJECT_TechKnowledgeBase",
+  "version": "2.6.0",
+  "lastUpdated": "2024-01-15T21:00:00Z",
+  "description": "Реестр всех функций с трассировкой вызовов",
+  
+  "functions": {
+    "FUNC_getNodeByPath_001": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "getNodeByPath",
+      "params": ["path"],
+      "returns": "Node|null",
+      "calls": [],
+      "calledBy": [
+        "FUNC_addTechnology_005",
+        "FUNC_toggleTech_006",
+        "FUNC_deleteNode_007",
+        "FUNC_addNode_008",
+        "FUNC_editNode_013",
+        "FUNC_editTechnology_014",
+        "FUNC_deleteTechnology_015",
+        "FUNC_getNodeAtIndex_016"
+      ],
+      "complexity": 3,
+      "lineStart": 7,
+      "lineEnd": 15
+    },
+    
+    "FUNC_saveToLocalStorage_002": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "saveToLocalStorage",
+      "params": [],
+      "returns": "void",
+      "calls": [],
+      "calledBy": [
+        "FUNC_addCategory_004",
+        "FUNC_addTechnology_005",
+        "FUNC_toggleTech_006",
+        "FUNC_deleteNode_007",
+        "FUNC_addNode_008",
+        "FUNC_importFromJSON_010",
+        "FUNC_importFromJSONText_012",
+        "FUNC_editNode_013",
+        "FUNC_editTechnology_014",
+        "FUNC_deleteTechnology_015"
+      ],
+      "complexity": 1,
+      "lineStart": 17,
+      "lineEnd": 20
+    },
+    
+    "FUNC_loadFromLocalStorage_003": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "loadFromLocalStorage",
+      "params": [],
+      "returns": "void",
+      "calls": [],
+      "calledBy": ["INIT"],
+      "complexity": 2,
+      "lineStart": 22,
+      "lineEnd": 28
+    },
+    
+    "FUNC_addCategory_004": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "addCategory",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_hideModals_002",
+        "FUNC_renderAccordion_002",
+        "FUNC_showNotification_003",
+        "FUNC_scheduleAutoSave_018"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 5,
+      "lineStart": 30,
+      "lineEnd": 48
+    },
+    
+    "FUNC_addTechnology_005": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "addTechnology",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_getNodeByPath_001",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_hideModals_002",
+        "FUNC_renderAccordion_002",
+        "FUNC_showNotification_003",
+        "FUNC_scheduleAutoSave_018"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 7,
+      "lineStart": 50,
+      "lineEnd": 80
+    },
+    
+    "FUNC_toggleTech_006": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "toggleTech",
+      "params": ["pathStr", "index"],
+      "returns": "void",
+      "calls": [
+        "FUNC_getNodeByPath_001",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_renderAccordion_002",
+        "FUNC_scheduleAutoSave_018"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 4,
+      "lineStart": 82,
+      "lineEnd": 92
+    },
+    
+    "FUNC_deleteNode_007": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "deleteNode",
+      "params": ["pathStr", "index"],
+      "returns": "void",
+      "calls": [
+        "FUNC_getNodeByPath_001",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_renderAccordion_002",
+        "FUNC_scheduleAutoSave_018"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 4,
+      "lineStart": 94,
+      "lineEnd": 105
+    },
+    
+    "FUNC_showModal_001": {
+      "module": "MODULE_UIManager_VER_1.0",
+      "name": "showModal",
+      "params": ["modalId"],
+      "returns": "void",
+      "calls": [],
+      "calledBy": [
+        "FUNC_showAddNodeModal_007",
+        "FUNC_showAddTechModal_008",
+        "FUNC_manageChecklist_001"
+      ],
+      "complexity": 2,
+      "lineStart": 7,
+      "lineEnd": 11
+    },
+    
+    "FUNC_hideModals_002": {
+      "module": "MODULE_UIManager_VER_1.0",
+      "name": "hideModals",
+      "params": [],
+      "returns": "void",
+      "calls": [],
+      "calledBy": [
+        "FUNC_addCategory_004",
+        "FUNC_addTechnology_005",
+        "FUNC_addNode_008",
+        "FUNC_saveChecklist_010",
+        "USER_ACTION"
+      ],
+      "complexity": 1,
+      "lineStart": 13,
+      "lineEnd": 16
+    },
+    
+    "FUNC_showNotification_003": {
+      "module": "MODULE_UIManager_VER_1.0",
+      "name": "showNotification",
+      "params": ["message", "type"],
+      "returns": "void",
+      "calls": [],
+      "calledBy": [
+        "FUNC_addCategory_004",
+        "FUNC_addTechnology_005",
+        "FUNC_addNode_008",
+        "FUNC_importFromJSON_010",
+        "FUNC_copyToClipboard_011",
+        "FUNC_importFromJSONText_012",
+        "FUNC_editNode_013",
+        "FUNC_editTechnology_014",
+        "FUNC_deleteTechnology_015",
+        "FUNC_saveChecklist_010"
+      ],
+      "complexity": 2,
+      "lineStart": 18,
+      "lineEnd": 27
+    },
+    
+    "FUNC_renderAccordion_002": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "renderAccordion",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_buildAccordion_004"
+      ],
+      "calledBy": [
+        "FUNC_init_001",
+        "FUNC_addCategory_004",
+        "FUNC_addTechnology_005",
+        "FUNC_toggleTech_006",
+        "FUNC_deleteNode_007",
+        "FUNC_addNode_008",
+        "FUNC_importFromJSON_010",
+        "FUNC_importFromJSONText_012",
+        "FUNC_editNode_013",
+        "FUNC_editTechnology_014",
+        "FUNC_deleteTechnology_015",
+        "FUNC_toggleItem_005",
+        "FUNC_toggleChecklist_008"
+      ],
+      "complexity": 4,
+      "lineStart": 17,
+      "lineEnd": 37
+    },
+    
+    "FUNC_buildAccordion_004": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "buildAccordion",
+      "params": ["nodes", "parentElement", "path"],
+      "returns": "void",
+      "calls": [
+        "FUNC_calculateNodeProgress_009",
+        "FUNC_createInlineChecklist_007",
+        "FUNC_buildAccordion_004"
+      ],
+      "calledBy": [
+        "FUNC_renderAccordion_002",
+        "FUNC_buildAccordion_004"
+      ],
+      "complexity": 15,
+      "lineStart": 44,
+      "lineEnd": 300,
+      "note": "Рекурсивная функция, высокая сложность"
+    },
+    
+    "FUNC_toggleItem_005": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "toggleItem",
+      "params": ["pathKey"],
+      "returns": "void",
+      "calls": [
+        "FUNC_renderAccordion_002"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 2,
+      "lineStart": 302,
+      "lineEnd": 306
+    },
+    
+    "FUNC_createInlineChecklist_007": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "createInlineChecklist",
+      "params": ["tech", "path", "index"],
+      "returns": "HTMLElement",
+      "calls": [
+        "FUNC_toggleChecklist_008"
+      ],
+      "calledBy": [
+        "FUNC_buildAccordion_004"
+      ],
+      "complexity": 8,
+      "lineStart": 313,
+      "lineEnd": 420
+    },
+    
+    "FUNC_toggleChecklist_008": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "toggleChecklist",
+      "params": ["checklistKey"],
+      "returns": "void",
+      "calls": [
+        "FUNC_renderAccordion_002"
+      ],
+      "calledBy": [
+        "FUNC_createInlineChecklist_007",
+        "USER_ACTION"
+      ],
+      "complexity": 2,
+      "lineStart": 422,
+      "lineEnd": 426
+    },
+    
+    "FUNC_calculateNodeProgress_009": {
+      "module": "MODULE_AccordionManager_VER_1.0",
+      "name": "calculateNodeProgress",
+      "params": ["node"],
+      "returns": "Object",
+      "calls": [
+        "FUNC_calculateNodeProgress_009"
+      ],
+      "calledBy": [
+        "FUNC_buildAccordion_004",
+        "FUNC_calculateNodeProgress_009"
+      ],
+      "complexity": 6,
+      "lineStart": 428,
+      "lineEnd": 460,
+      "note": "Рекурсивная функция"
+    },
+    
+    "FUNC_manageChecklist_001": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "manageChecklist",
+      "params": ["pathStr", "techIndex"],
+      "returns": "void",
+      "calls": [
+        "FUNC_getTechnology_011",
+        "FUNC_renderChecklist_009",
+        "FUNC_showModal_001"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 4,
+      "lineStart": 10,
+      "lineEnd": 26
+    },
+    
+    "FUNC_toggleChecklistItem_002": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "toggleChecklistItem",
+      "params": ["pathStr", "techIndex", "itemIndex"],
+      "returns": "void",
+      "calls": [
+        "FUNC_getTechnology_011",
+        "FUNC_renderChecklist_009",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_scheduleAutoSave_018",
+        "FUNC_renderCurrentView_017"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 5,
+      "lineStart": 28,
+      "lineEnd": 42
+    },
+    
+    "FUNC_addChecklistItem_003": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "addChecklistItem",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_getTechnology_011",
+        "FUNC_renderChecklist_009",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_scheduleAutoSave_018",
+        "FUNC_renderCurrentView_017"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 5,
+      "lineStart": 44,
+      "lineEnd": 67
+    },
+    
+    "FUNC_renderChecklist_009": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "renderChecklist",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_getTechnology_011"
+      ],
+      "calledBy": [
+        "FUNC_manageChecklist_001",
+        "FUNC_toggleChecklistItem_002",
+        "FUNC_addChecklistItem_003",
+        "FUNC_removeChecklistItem_005",
+        "FUNC_editChecklistItem_007"
+      ],
+      "complexity": 8,
+      "lineStart": 150,
+      "lineEnd": 230
+    },
+    
+    "FUNC_saveChecklist_010": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "saveChecklist",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_hideModals_002",
+        "FUNC_saveToLocalStorage_002",
+        "FUNC_showNotification_003",
+        "FUNC_scheduleAutoSave_018",
+        "FUNC_renderCurrentView_017"
+      ],
+      "calledBy": ["USER_ACTION"],
+      "complexity": 5,
+      "lineStart": 232,
+      "lineEnd": 239
+    },
+    
+    "FUNC_getTechnology_011": {
+      "module": "MODULE_ChecklistManager_VER_1.0",
+      "name": "getTechnology",
+      "params": [],
+      "returns": "Object|null",
+      "calls": [
+        "FUNC_getNodeByPath_001"
+      ],
+      "calledBy": [
+        "FUNC_manageChecklist_001",
+        "FUNC_toggleChecklistItem_002",
+        "FUNC_addChecklistItem_003",
+        "FUNC_addChecklistItemInAccordion_004",
+        "FUNC_removeChecklistItem_005",
+        "FUNC_editChecklistItem_007",
+        "FUNC_renderChecklist_009"
+      ],
+      "complexity": 2,
+      "lineStart": 241,
+      "lineEnd": 245
+    },
+    
+    "FUNC_scheduleAutoSave_018": {
+      "module": "MODULE_AuthManager_VER_1.0",
+      "name": "scheduleAutoSave",
+      "params": [],
+      "returns": "void",
+      "calls": [],
+      "calledBy": [
+        "FUNC_addCategory_004",
+        "FUNC_addTechnology_005",
+        "FUNC_toggleTech_006",
+        "FUNC_deleteNode_007",
+        "FUNC_addNode_008",
+        "FUNC_importFromJSON_010",
+        "FUNC_importFromJSONText_012",
+        "FUNC_editNode_013",
+        "FUNC_editTechnology_014",
+        "FUNC_deleteTechnology_015",
+        "FUNC_toggleChecklistItem_002",
+        "FUNC_addChecklistItem_003",
+        "FUNC_saveChecklist_010"
+      ],
+      "complexity": 3,
+      "note": "Вызывается после каждого изменения данных"
+    },
+    
+    "FUNC_renderCurrentView_017": {
+      "module": "MODULE_DataManager_VER_1.0",
+      "name": "renderCurrentView",
+      "params": [],
+      "returns": "void",
+      "calls": [
+        "FUNC_renderAccordion_002"
+      ],
+      "calledBy": [
+        "FUNC_toggleChecklistItem_002",
+        "FUNC_addChecklistItem_003",
+        "FUNC_addChecklistItemInAccordion_004",
+        "FUNC_removeChecklistItem_005",
+        "FUNC_editChecklistItem_007",
+        "FUNC_saveChecklist_010"
+      ],
+      "complexity": 1
+    }
+  },
+  
+  "stats": {
+    "totalFunctions": 214,
+    "analyzedFunctions": 214,
+    "coveragePercent": 100,
+    "mostCalledFunction": "FUNC_saveToLocalStorage_002",
+    "mostCalledCount": 13,
+    "mostComplexFunction": "FUNC_buildAccordion_004",
+    "mostComplexScore": 15,
+    "recursiveFunctions": [
+      "FUNC_buildAccordion_004",
+      "FUNC_calculateNodeProgress_009"
+    ],
+    "unusedFunctions": []
+  },
+  
+  "callGraph": {
+    "description": "Граф вызовов функций для визуализации",
+    "hotPaths": [
+      {
+        "name": "Add Category Flow",
+        "path": [
+          "USER_ACTION",
+          "FUNC_addCategory_004",
+          "FUNC_saveToLocalStorage_002",
+          "FUNC_hideModals_002",
+          "FUNC_renderAccordion_002",
+          "FUNC_buildAccordion_004",
+          "FUNC_showNotification_003",
+          "FUNC_scheduleAutoSave_018"
+        ],
+        "avgDuration": "~20ms"
+      },
+      {
+        "name": "Toggle Tech Flow",
+        "path": [
+          "USER_ACTION",
+          "FUNC_toggleTech_006",
+          "FUNC_getNodeByPath_001",
+          "FUNC_saveToLocalStorage_002",
+          "FUNC_renderAccordion_002",
+          "FUNC_buildAccordion_004",
+          "FUNC_scheduleAutoSave_018"
+        ],
+        "avgDuration": "~15ms"
+      }
+    ]
+  },
+  
+  "recommendations": [
+    {
+      "type": "performance",
+      "priority": "high",
+      "issue": "FUNC_buildAccordion_004 вызывается слишком часто",
+      "solution": "Добавить debounce для renderAccordion"
+    },
+    {
+      "type": "architecture",
+      "priority": "medium",
+      "issue": "FUNC_saveToLocalStorage_002 вызывается 13 раз из разных модулей",
+      "solution": "Централизовать сохранение через event bus"
+    },
+    {
+      "type": "complexity",
+      "priority": "high",
+      "issue": "FUNC_buildAccordion_004 имеет сложность 15",
+      "solution": "Разбить на более мелкие функции"
+    }
+  ]
+}

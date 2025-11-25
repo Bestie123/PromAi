@@ -1,0 +1,197 @@
+{
+  "projectId": "PROJECT_TechKnowledgeBase",
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-15T00:15:00Z",
+  "description": "Архитектурные слои проекта с правилами зависимостей",
+  
+  "layers": {
+    "LAYER_1_CORE": {
+      "name": "Core Utilities",
+      "description": "Базовые утилиты без зависимостей",
+      "modules": [
+        "MODULE_DOMFactory_VER_1.0",
+        "MODULE_FunctionTracer_VER_1.0",
+        "MODULE_DependencyValidator_VER_1.0"
+      ],
+      "canDependOn": [],
+      "rules": [
+        "Не может зависеть от других модулей",
+        "Предоставляет базовую функциональность",
+        "Используется всеми остальными слоями"
+      ],
+      "color": "#4CAF50"
+    },
+    
+    "LAYER_2_DATA": {
+      "name": "Data Management",
+      "description": "Управление данными и состоянием",
+      "modules": [
+        "MODULE_DataManager_VER_1.0"
+      ],
+      "canDependOn": ["LAYER_1_CORE"],
+      "rules": [
+        "Может зависеть только от LAYER_1_CORE",
+        "Управляет структурой данных",
+        "Отвечает за LocalStorage",
+        "Не знает о UI"
+      ],
+      "color": "#2196F3"
+    },
+    
+    "LAYER_3_UI": {
+      "name": "UI Components",
+      "description": "Базовые UI компоненты",
+      "modules": [
+        "MODULE_UIManager_VER_1.0",
+        "MODULE_AccordionManager_VER_1.0",
+        "MODULE_ChecklistManager_VER_1.0"
+      ],
+      "canDependOn": ["LAYER_1_CORE", "LAYER_2_DATA"],
+      "rules": [
+        "Может зависеть от LAYER_1_CORE и LAYER_2_DATA",
+        "Отвечает за отображение UI",
+        "Использует DOMFactory для создания элементов",
+        "Не знает о бизнес-логике Knowledge"
+      ],
+      "color": "#FF9800"
+    },
+    
+    "LAYER_4_INTEGRATION": {
+      "name": "Integration Services",
+      "description": "Интеграция с внешними сервисами",
+      "modules": [
+        "MODULE_AuthManager_VER_1.0"
+      ],
+      "canDependOn": ["LAYER_1_CORE", "LAYER_2_DATA", "LAYER_3_UI"],
+      "rules": [
+        "Может зависеть от LAYER_1_CORE, LAYER_2_DATA, LAYER_3_UI",
+        "Отвечает за GitHub интеграцию",
+        "Управляет синхронизацией",
+        "Не знает о Knowledge модулях"
+      ],
+      "color": "#9C27B0"
+    },
+    
+    "LAYER_5_KNOWLEDGE": {
+      "name": "Knowledge Base",
+      "description": "Система управления базой знаний",
+      "modules": [
+        "MODULE_KnowledgeManager_VER_1.0",
+        "MODULE_KnowledgeEditor_VER_1.0"
+      ],
+      "canDependOn": ["LAYER_1_CORE", "LAYER_2_DATA", "LAYER_3_UI"],
+      "rules": [
+        "Может зависеть от LAYER_1_CORE, LAYER_2_DATA, LAYER_3_UI",
+        "Отвечает за редактирование контента",
+        "Управляет медиафайлами и ссылками",
+        "KnowledgeEditor зависит от KnowledgeManager"
+      ],
+      "color": "#F44336"
+    }
+  },
+  
+  "dependencyRules": {
+    "allowed": [
+      "LAYER_2_DATA → LAYER_1_CORE",
+      "LAYER_3_UI → LAYER_1_CORE",
+      "LAYER_3_UI → LAYER_2_DATA",
+      "LAYER_4_INTEGRATION → LAYER_1_CORE",
+      "LAYER_4_INTEGRATION → LAYER_2_DATA",
+      "LAYER_4_INTEGRATION → LAYER_3_UI",
+      "LAYER_5_KNOWLEDGE → LAYER_1_CORE",
+      "LAYER_5_KNOWLEDGE → LAYER_2_DATA",
+      "LAYER_5_KNOWLEDGE → LAYER_3_UI"
+    ],
+    "forbidden": [
+      "LAYER_1_CORE → любой слой",
+      "LAYER_2_DATA → LAYER_3_UI",
+      "LAYER_2_DATA → LAYER_4_INTEGRATION",
+      "LAYER_2_DATA → LAYER_5_KNOWLEDGE",
+      "LAYER_3_UI → LAYER_4_INTEGRATION",
+      "LAYER_3_UI → LAYER_5_KNOWLEDGE",
+      "LAYER_4_INTEGRATION → LAYER_5_KNOWLEDGE",
+      "LAYER_5_KNOWLEDGE → LAYER_4_INTEGRATION"
+    ]
+  },
+  
+  "moduleDetails": {
+    "MODULE_DependencyValidator_VER_1.0": {
+      "layer": "LAYER_1_CORE",
+      "purpose": "Валидация зависимостей и архитектурных правил",
+      "dependencies": [],
+      "dependents": 0
+    },
+    "MODULE_DOMFactory_VER_1.0": {
+      "layer": "LAYER_1_CORE",
+      "purpose": "Автоматическое создание DOM элементов с data-атрибутами",
+      "dependencies": [],
+      "dependents": 4
+    },
+    "MODULE_FunctionTracer_VER_1.0": {
+      "layer": "LAYER_1_CORE",
+      "purpose": "Трассировка вызовов функций",
+      "dependencies": [],
+      "dependents": 0
+    },
+    "MODULE_DataManager_VER_1.0": {
+      "layer": "LAYER_2_DATA",
+      "purpose": "CRUD операции с данными, LocalStorage",
+      "dependencies": [],
+      "dependents": 5
+    },
+    "MODULE_UIManager_VER_1.0": {
+      "layer": "LAYER_3_UI",
+      "purpose": "Модальные окна, уведомления",
+      "dependencies": [],
+      "dependents": 4
+    },
+    "MODULE_AccordionManager_VER_1.0": {
+      "layer": "LAYER_3_UI",
+      "purpose": "Отображение иерархии категорий",
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "dependents": 0
+    },
+    "MODULE_ChecklistManager_VER_1.0": {
+      "layer": "LAYER_3_UI",
+      "purpose": "Управление чек-листами",
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "dependents": 0
+    },
+    "MODULE_AuthManager_VER_1.0": {
+      "layer": "LAYER_4_INTEGRATION",
+      "purpose": "GitHub синхронизация и автосохранение",
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0"],
+      "dependents": 0
+    },
+    "MODULE_KnowledgeManager_VER_1.0": {
+      "layer": "LAYER_5_KNOWLEDGE",
+      "purpose": "Управление базой знаний",
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "dependents": 1
+    },
+    "MODULE_KnowledgeEditor_VER_1.0": {
+      "layer": "LAYER_5_KNOWLEDGE",
+      "purpose": "Редактор контента с форматированием",
+      "dependencies": ["MODULE_KnowledgeManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "dependents": 0
+    }
+  },
+  
+  "stats": {
+    "totalLayers": 5,
+    "totalModules": 10,
+    "layerDistribution": {
+      "LAYER_1_CORE": 3,
+      "LAYER_2_DATA": 1,
+      "LAYER_3_UI": 3,
+      "LAYER_4_INTEGRATION": 1,
+      "LAYER_5_KNOWLEDGE": 2
+    },
+    "maxDepth": 4,
+    "violations": 0
+  },
+  
+  "visualization": {
+    "mermaid": "graph TD\n    L1[LAYER_1_CORE: DOMFactory, FunctionTracer, DependencyValidator]\n    L2[LAYER_2_DATA: DataManager]\n    L3[LAYER_3_UI: UIManager, Accordion, Checklist]\n    L4[LAYER_4_INTEGRATION: AuthManager]\n    L5[LAYER_5_KNOWLEDGE: KnowledgeManager, KnowledgeEditor]\n    \n    L2 --> L1\n    L3 --> L1\n    L3 --> L2\n    L4 --> L1\n    L4 --> L2\n    L4 --> L3\n    L5 --> L1\n    L5 --> L2\n    L5 --> L3"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "projectId": "PROJECT_TechKnowledgeBase",
+  "version": "2.6.0",
+  "lastUpdated": "2024-01-15T21:00:00Z",
+  "tasks": [
+    {"id": "TASK_032", "title": "Проверка неиспользуемых функций", "status": "done", "priority": "medium", "assignedTo": "SYSTEM", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 3, "actualHours": 1, "tags": ["quick-wins", "analysis", "completed"]},
+    {"id": "TASK_031", "title": "Создать dependency_matrix.md", "status": "done", "priority": "medium", "assignedTo": "SYSTEM", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 2, "actualHours": 1, "tags": ["quick-wins", "documentation", "completed"]},
+    {"id": "TASK_030", "title": "Inspector: экспорт отчётов (JSON/MD/HTML)", "status": "done", "priority": "critical", "assignedTo": "MODULE_Inspector_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 4, "actualHours": 2, "tags": ["phase3", "export", "completed"]},
+    {"id": "TASK_029", "title": "Inspector: живая трассировка", "status": "done", "priority": "critical", "assignedTo": "MODULE_Inspector_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 12, "actualHours": 6, "tags": ["phase3", "tracing", "completed"]},
+    {"id": "TASK_028", "title": "Создать trace_log.json и FunctionTracer", "status": "done", "priority": "critical", "assignedTo": "MODULE_FunctionTracer_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 8, "actualHours": 4, "tags": ["phase3", "tracing", "completed"]},
+    {"id": "TASK_027", "title": "Дорефакторить AccordionManager на DOMFactory", "status": "done", "priority": "high", "assignedTo": "MODULE_AccordionManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 2, "actualHours": 2, "tags": ["phase1", "refactoring", "completed"]},
+    {"id": "TASK_026", "title": "Создать dom_creator_map.json", "status": "done", "priority": "critical", "assignedTo": "MODULE_DOMFactory_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 6, "actualHours": 6, "tags": ["phase1", "tracking", "completed"]},
+    {"id": "TASK_025", "title": "Дополнить function_registry.json (162 функции)", "status": "done", "priority": "critical", "assignedTo": "SYSTEM", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 4, "actualHours": 4, "tags": ["phase1", "documentation", "completed"]},
+    {"id": "TASK_024", "title": "Создать DependencyValidator", "status": "done", "priority": "critical", "assignedTo": "MODULE_DependencyValidator_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 6, "actualHours": 6, "tags": ["phase1", "validation", "completed"]},
+    {"id": "TASK_023", "title": "Создать architecture_layers.json", "status": "done", "priority": "critical", "assignedTo": "SYSTEM", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 4, "actualHours": 4, "tags": ["phase1", "architecture", "completed"]},
+    {"id": "TASK_022", "title": "Создать DOMFactory", "status": "done", "priority": "critical", "assignedTo": "MODULE_DOMFactory_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 12, "actualHours": 12, "progress": "100%", "completed": ["DOMFactory создан", "AccordionManager частично", "ChecklistManager полностью", "KnowledgeManager полностью", "KnowledgeEditor полностью", "Документация создана"], "remaining": [], "tags": ["phase1", "automation", "completed"]},
+    {"id": "TASK_021", "title": "Создать function_registry.json", "status": "done", "priority": "critical", "assignedTo": "SYSTEM", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 8, "actualHours": 1, "tags": ["phase1", "tracing"]},
+    {"id": "TASK_020", "title": "Добавление технологии напрямую через prompt", "status": "done", "priority": "high", "assignedTo": "MODULE_AccordionManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 1, "actualHours": 1, "tags": ["feature", "ux"]},
+    {"id": "TASK_019", "title": "Автовыбор категории в showAddTechModal", "status": "done", "priority": "high", "assignedTo": "MODULE_UIManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 0.5, "actualHours": 0.5, "tags": ["feature"]},
+    {"id": "TASK_018", "title": "Исправить addTechnology - использовать выбранный путь", "status": "done", "priority": "critical", "assignedTo": "MODULE_DataManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 0.5, "actualHours": 0.5, "tags": ["bug"]},
+    {"id": "TASK_017", "title": "Исправить FUNC_toggleTech_006", "status": "done", "priority": "critical", "assignedTo": "MODULE_AccordionManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 0.2, "actualHours": 0.2, "tags": ["bug"]},
+    {"id": "TASK_016", "title": "Использовать onclick вместо addEventListener", "status": "done", "priority": "critical", "assignedTo": "MODULE_ChecklistManager_VER_1.0", "created": "2024-01-15", "completed": "2024-01-15", "estimatedHours": 0.5, "actualHours": 0.5, "tags": ["bug", "events"]}
+  ],
+  "backlog": [
+    {"id": "TASK_004", "title": "Добавить unit тесты", "priority": "medium", "estimatedHours": 6, "tags": ["testing"]},
+    {"id": "TASK_005", "title": "Оптимизировать производительность", "priority": "low", "estimatedHours": 4, "tags": ["performance"]}
+  ],
+  "inProgress": [],
+  "done": ["TASK_016", "TASK_017", "TASK_018", "TASK_019", "TASK_020", "TASK_021", "TASK_022", "TASK_023", "TASK_024", "TASK_025", "TASK_026", "TASK_027", "TASK_028", "TASK_029", "TASK_030", "TASK_031", "TASK_032"],
+  "stats": {
+    "total": 19,
+    "completed": 17,
+    "inProgress": 0,
+    "backlog": 2,
+    "completionRate": "89.5%",
+    "totalEstimatedHours": 75.7,
+    "totalActualHours": 49.7,
+    "quickWinsCompleted": true,
+    "phase1Completed": true,
+    "phase1FullyCompleted": true,
+    "phase3Completed": true
+  }
+}

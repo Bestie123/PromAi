@@ -1,0 +1,229 @@
+<!-- МОДАЛЬНОЕ ОКНО БАЗЫ ЗНАНИЙ -->
+<div id="knowledgeModal" class="modal knowledge-modal" data-module-id="MODULE_KnowledgeManager_VER_1.0" data-component-id="COMP_KnowledgeModal">
+    <div class="modal-content" data-component-id="COMP_KnowledgeModalContent">
+        <div class="modal-header" data-component-id="COMP_KnowledgeModalHeader">
+            <h3 id="knowledgeTitle" data-component-id="COMP_KnowledgeTitle">База знаний</h3>
+            <button onclick="uiManager.hideModals()" data-function-id="FUNC_hideModals_002" data-component-id="COMP_CloseKnowledgeBtn">✕</button>
+        </div>
+        
+        <div class="content-tabs" data-component-id="COMP_ContentTabs">
+            <div class="content-tab active" onclick="knowledgeManager.switchTab('editor')" data-component-id="COMP_EditorTab">✏️ Редактор</div>
+            <div class="content-tab" onclick="knowledgeManager.switchTab('preview')" data-component-id="COMP_PreviewTab">👁️ Просмотр</div>
+            <div class="content-tab" onclick="knowledgeManager.switchTab('media')" data-component-id="COMP_MediaTab">🖼️ Медиафайлы</div>
+            <div class="content-tab" onclick="knowledgeManager.switchTab('links')" data-component-id="COMP_LinksTab">🔗 Ссылки</div>
+        </div>
+        
+        <!-- Вкладка редактора -->
+        <div id="editorTab" class="tab-content active" data-component-id="COMP_EditorTabContent">
+            <div class="content-editor" data-component-id="COMP_ContentEditor">
+                <div class="editor-toolbar" data-component-id="COMP_EditorToolbar">
+                    <!-- Группа 1: Основные операции -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.undo()" title="Отменить (Ctrl+Z)" data-function-id="FUNC_undo_002">↶</button>
+                        <button onclick="knowledgeEditor.redo()" title="Повторить (Ctrl+Y)" data-function-id="FUNC_redo_003">↷</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 2: Форматирование текста -->
+                    <div class="toolbar-group">
+                        <select onchange="knowledgeEditor.formatText('fontSize', this.value)" class="font-size-select" title="Размер шрифта" data-function-id="FUNC_formatText_004">
+                            <option value="">Размер</option>
+                            <option value="1">8pt</option>
+                            <option value="2">10pt</option>
+                            <option value="3">12pt</option>
+                            <option value="4">14pt</option>
+                            <option value="5">18pt</option>
+                            <option value="6">24pt</option>
+                            <option value="7">36pt</option>
+                        </select>
+                        <select onchange="knowledgeEditor.formatText('fontName', this.value)" title="Шрифт" data-function-id="FUNC_formatText_004">
+                            <option value="">Шрифт</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 3: Стили текста -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.formatText('bold')" title="Жирный (Ctrl+B)" data-function-id="FUNC_formatText_004"><b>B</b></button>
+                        <button onclick="knowledgeEditor.formatText('italic')" title="Курсив (Ctrl+I)" data-function-id="FUNC_formatText_004"><i>I</i></button>
+                        <button onclick="knowledgeEditor.formatText('underline')" title="Подчеркивание (Ctrl+U)" data-function-id="FUNC_formatText_004"><u>U</u></button>
+                        <button onclick="knowledgeEditor.formatText('strikeThrough')" title="Зачеркивание" data-function-id="FUNC_formatText_004"><s>S</s></button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 4: Цвета и выделение -->
+                    <div class="toolbar-group">
+                        <div class="color-picker" onclick="knowledgeEditor.showColorPalette('foreColor')" title="Цвет текста" data-function-id="FUNC_showColorPalette_034">
+                            <div style="width: 20px; height: 20px; background: #000; border-radius: 2px; margin: 4px;"></div>
+                        </div>
+                        <div class="color-picker" onclick="knowledgeEditor.showColorPalette('backColor')" title="Цвет фона" data-function-id="FUNC_showColorPalette_034">
+                            <div style="width: 20px; height: 20px; background: #fff; border: 1px solid #ddd; border-radius: 2px; margin: 4px;"></div>
+                        </div>
+                        <button onclick="knowledgeEditor.highlightText()" title="Выделить текст" data-function-id="FUNC_highlightText_029">🖍️</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 5: Выравнивание -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.formatText('justifyLeft')" title="Выровнять по левому краю" data-function-id="FUNC_formatText_004">⬅️</button>
+                        <button onclick="knowledgeEditor.formatText('justifyCenter')" title="Выровнять по центру" data-function-id="FUNC_formatText_004">⬌</button>
+                        <button onclick="knowledgeEditor.formatText('justifyRight')" title="Выровнять по правому краю" data-function-id="FUNC_formatText_004">➡️</button>
+                        <button onclick="knowledgeEditor.formatText('justifyFull')" title="Выровнять по ширине" data-function-id="FUNC_formatText_004">⬌⬅️</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 6: Отступы и индексы -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.outdent()" title="Уменьшить отступ" data-function-id="FUNC_outdent_042">↶</button>
+                        <button onclick="knowledgeEditor.indent()" title="Увеличить отступ" data-function-id="FUNC_indent_043">↷</button>
+                        <button onclick="knowledgeEditor.formatText('superscript')" title="Надстрочный" data-function-id="FUNC_formatText_004">X²</button>
+                        <button onclick="knowledgeEditor.formatText('subscript')" title="Подстрочный" data-function-id="FUNC_formatText_004">X₂</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 7: Заголовки -->
+                    <div class="toolbar-group">
+                        <select onchange="knowledgeEditor.insertHeading(this.value)" class="heading-select" title="Заголовки" data-function-id="FUNC_insertHeading_005">
+                            <option value="">Заголовок</option>
+                            <option value="1">Заголовок 1</option>
+                            <option value="2">Заголовок 2</option>
+                            <option value="3">Заголовок 3</option>
+                            <option value="4">Заголовок 4</option>
+                            <option value="5">Заголовок 5</option>
+                            <option value="6">Заголовок 6</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 8: Списки -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.insertList('ul')" title="Маркированный список" data-function-id="FUNC_insertList_006">•</button>
+                        <button onclick="knowledgeEditor.insertList('ol')" title="Нумерованный список" data-function-id="FUNC_insertList_006">1.</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 9: Медиа и ссылки -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.insertLink()" title="Вставить ссылку (Ctrl+K)" data-function-id="FUNC_insertLink_007">🔗</button>
+                        <button onclick="knowledgeEditor.insertImage()" title="Вставить изображение" data-function-id="FUNC_insertImage_024">🖼️</button>
+                        <button onclick="knowledgeEditor.insertVideo()" title="Вставить видео" data-function-id="FUNC_insertVideo_025">🎬</button>
+                        <button onclick="knowledgeEditor.insertTable()" title="Вставить таблицу" data-function-id="FUNC_insertTable_009">⧠</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 10: Код и элементы -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.insertCode()" title="Вставить блок кода" data-function-id="FUNC_insertCode_008">{}</button>
+                        <button onclick="knowledgeEditor.insertBlockQuote()" title="Цитата" data-function-id="FUNC_insertBlockQuote_030">"❝</button>
+                        <button onclick="knowledgeEditor.insertHorizontalRule()" title="Разделитель" data-function-id="FUNC_insertHorizontalRule_031">━</button>
+                        <button onclick="knowledgeEditor.insertCollapsibleSection()" title="Сворачиваемый раздел" data-function-id="FUNC_insertCollapsibleSection_032">📦</button>
+                        <button onclick="knowledgeEditor.insertFootnote()" title="Сноска" data-function-id="FUNC_insertFootnote_027">📝</button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+
+                    <!-- Группа 11: Дополнительно -->
+                    <div class="toolbar-group">
+                        <button onclick="knowledgeEditor.showEmojiPanel()" title="Эмодзи" data-function-id="FUNC_showEmojiPanel_035">😊</button>
+                        <button onclick="knowledgeEditor.showFindReplace()" title="Найти и заменить (Ctrl+F)" data-function-id="FUNC_showFindReplace_036">🔍</button>
+                        <button onclick="knowledgeEditor.insertInternalLink()" title="Внутренняя ссылка" data-function-id="FUNC_insertInternalLink_026">📎</button>
+                        <button onclick="knowledgeEditor.clearFormatting()" title="Очистить форматирование" data-function-id="FUNC_clearFormatting_041">🧹</button>
+                    </div>
+
+                    <!-- Панель поиска и замены -->
+                    <div id="findReplacePanel" class="find-replace-panel" data-component-id="COMP_FindReplacePanel">
+                        <input type="text" id="findText" placeholder="Найти..." data-component-id="COMP_FindTextInput">
+                        <input type="text" id="replaceText" placeholder="Заменить на..." data-component-id="COMP_ReplaceTextInput">
+                        <div class="buttons">
+                            <button onclick="knowledgeEditor.findNext()" data-function-id="FUNC_findNext_038">Найти</button>
+                            <button onclick="knowledgeEditor.replace()" data-function-id="FUNC_replace_039">Заменить</button>
+                            <button onclick="knowledgeEditor.replaceAll()" class="primary" data-function-id="FUNC_replaceAll_040">Заменить все</button>
+                            <button onclick="knowledgeEditor.hideFindReplace()" data-function-id="FUNC_hideFindReplace_037">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- Контролы таблиц -->
+                    <div id="tableControls" class="table-controls" data-component-id="COMP_TableControls">
+                        <div class="toolbar-separator"></div>
+                        <button onclick="knowledgeEditor.insertTableRow()" title="Добавить строку" data-function-id="FUNC_insertTableRow_012">➕↔️</button>
+                        <button onclick="knowledgeEditor.deleteTableRow()" title="Удалить строку" data-function-id="FUNC_deleteTableRow_013">➖↔️</button>
+                        <button onclick="knowledgeEditor.insertTableColumn()" title="Добавить столбец" data-function-id="FUNC_insertTableColumn_014">➕↕️</button>
+                        <button onclick="knowledgeEditor.deleteTableColumn()" title="Удалить столбец" data-function-id="FUNC_deleteTableColumn_015">➖↕️</button>
+                        <button onclick="knowledgeEditor.mergeTableCells()" title="Объединить ячейки" data-function-id="FUNC_mergeTableCells_016">🔗</button>
+                        <button onclick="knowledgeEditor.splitTableCell()" title="Разделить ячейку" data-function-id="FUNC_splitTableCell_017">🔀</button>
+                        <div class="toolbar-separator"></div>
+                        <button onclick="knowledgeEditor.alignCellLeft()" title="Выровнять по левому краю" data-function-id="FUNC_alignCellLeft_018">⬅️</button>
+                        <button onclick="knowledgeEditor.alignCellCenter()" title="Выровнять по центру" data-function-id="FUNC_alignCellCenter_019">⬌</button>
+                        <button onclick="knowledgeEditor.alignCellRight()" title="Выровнять по правому краю" data-function-id="FUNC_alignCellRight_020">➡️</button>
+                        <div class="toolbar-separator"></div>
+                        <button onclick="knowledgeEditor.showTableProperties()" title="Свойства таблицы" data-function-id="FUNC_showTableProperties_022">⚙️</button>
+                    </div>
+                </div>
+                <div id="knowledgeEditor" class="editor-content" contenteditable="true" spellcheck="false" data-component-id="COMP_KnowledgeEditor"></div>
+            </div>
+        </div>
+        
+        <!-- Вкладка просмотра -->
+        <div id="previewTab" class="tab-content" data-component-id="COMP_PreviewTabContent">
+            <div id="knowledgePreview" class="knowledge-content" data-component-id="COMP_KnowledgePreview"></div>
+        </div>
+        
+        <!-- Вкладка медиафайлов -->
+        <div id="mediaTab" class="tab-content" data-component-id="COMP_MediaTabContent">
+            <div class="media-upload-area" id="mediaDropZone" data-component-id="COMP_MediaDropZone">
+                📁 Перетащите сюда изображения или видео<br>
+                <small>или нажмите для выбора файлов</small>
+                <input type="file" id="mediaUpload" multiple accept="image/*,video/*" style="display: none;" data-component-id="COMP_MediaUploadInput">
+            </div>
+            <div id="mediaGallery" class="media-gallery" data-component-id="COMP_MediaGallery"></div>
+        </div>
+        
+        <!-- Вкладка ссылок -->
+        <div id="linksTab" class="tab-content" data-component-id="COMP_LinksTabContent">
+            <div class="search-box" data-component-id="COMP_LinkSearchBox">
+                <input type="text" id="linkSearch" placeholder="Поиск технологий..." data-component-id="COMP_LinkSearchInput">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div id="linksList" class="links-panel" data-component-id="COMP_LinksList"></div>
+        </div>
+        
+        <div class="knowledge-actions" data-component-id="COMP_KnowledgeActions">
+            <div>
+                <button onclick="knowledgeManager.saveContent()" class="success" data-function-id="FUNC_saveContent_015">💾 Сохранить</button>
+                <button onclick="knowledgeManager.exportContent()" data-function-id="FUNC_exportContent_016">📥 Экспорт</button>
+                <button onclick="knowledgeManager.importContent()" data-function-id="FUNC_importContent_017">📤 Импорт</button>
+            </div>
+            <button onclick="uiManager.hideModals()" data-function-id="FUNC_hideModals_002">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ПОИСКА -->
+<div id="searchModal" class="modal" data-module-id="MODULE_KnowledgeManager_VER_1.0" data-component-id="COMP_SearchModal">
+    <div class="modal-content" data-component-id="COMP_SearchModalContent">
+        <div class="modal-header" data-component-id="COMP_SearchModalHeader">
+            <h3 data-component-id="COMP_SearchModalTitle">🔍 Поиск по базе знаний</h3>
+            <button onclick="uiManager.hideModals()" data-function-id="FUNC_hideModals_002" data-component-id="COMP_CloseSearchBtn">✕</button>
+        </div>
+        <div class="search-box" data-component-id="COMP_GlobalSearchBox">
+            <input type="text" id="globalSearch" placeholder="Введите поисковый запрос..." data-component-id="COMP_GlobalSearchInput">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div id="searchResults" style="max-height: 400px; overflow-y: auto; margin-top: 15px;" data-component-id="COMP_SearchResults"></div>
+    </div>
+</div>
+
+<!-- Секция для JSON -->
+<div id="jsonSection" class="hidden" data-module-id="MODULE_DataManager_VER_1.0" data-component-id="COMP_JsonSection">
+    <h3 data-component-id="COMP_JsonSectionTitle">JSON данные:</h3>
+    <textarea id="jsonOutput" style="width: 100%; height: 200px;" data-component-id="COMP_JsonOutput"></textarea>
+    <div data-component-id="COMP_JsonActions">
+        <button onclick="dataManager.copyToClipboard()" data-function-id="FUNC_copyToClipboard_011">📋 Копировать JSON</button>
+        <button onclick="dataManager.importFromJSONText()" data-function-id="FUNC_importFromJSONText_012">📤 Импорт из этого JSON</button>
+        <button onclick="uiManager.hideJSON()" data-function-id="FUNC_hideJSON_004">Скрыть</button>
+    </div>
+</div>

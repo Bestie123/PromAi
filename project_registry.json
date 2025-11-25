@@ -1,0 +1,127 @@
+{
+  "projectId": "PROJECT_TechKnowledgeBase",
+  "version": "3.5.0",
+  "lastUpdated": "2024-01-15T06:30:00Z",
+  "dependencyMatrix": "dependency_matrix.md",
+  "unusedFunctions": "unused_functions.json",
+  "domCreatorMap": "dom_creator_map.json",
+  "traceLog": "trace_log.json",
+  "functionRegistry": "function_registry.json",
+  "architectureLayers": "architecture_layers.json",
+  "contextPack": "context_pack.json",
+  "idMapper": "id_mapper.json",
+  "contextLayers": {
+    "core": "context_core.json",
+    "data": "context_data.json",
+    "ui": "context_ui.json"
+  },
+  "changelogCompact": "changelog_compact.json",
+  "modules": {
+    "MODULE_DataManager_VER_1.0": {
+      "path": "src/modules/DataManager.js",
+      "functions": ["FUNC_getNodeByPath_001", "FUNC_saveToLocalStorage_002", "FUNC_loadFromLocalStorage_003", "FUNC_addCategory_004", "FUNC_addTechnology_005", "FUNC_toggleTech_006", "FUNC_deleteNode_007", "FUNC_addNode_008", "FUNC_exportToJSON_009", "FUNC_importFromJSON_010", "FUNC_copyToClipboard_011", "FUNC_importFromJSONText_012", "FUNC_editNode_013", "FUNC_editTechnology_014", "FUNC_deleteTechnology_015", "FUNC_getNodeAtIndex_016", "FUNC_renderCurrentView_017"],
+      "dependencies": [],
+      "status": "active"
+    },
+    "MODULE_UIManager_VER_1.0": {
+      "path": "src/modules/UIManager.js",
+      "functions": ["FUNC_showModal_001", "FUNC_hideModals_002", "FUNC_showNotification_003", "FUNC_hideJSON_004", "FUNC_showAddNodeModal_007", "FUNC_showAddTechModal_008"],
+      "dependencies": [],
+      "status": "active"
+    },
+    "MODULE_AccordionManager_VER_1.0": {
+      "path": "src/modules/AccordionManager.js",
+      "functions": ["FUNC_init_001", "FUNC_renderAccordion_002", "FUNC_render_003", "FUNC_buildAccordion_004", "FUNC_toggleItem_005", "FUNC_toggle_006", "FUNC_createInlineChecklist_007", "FUNC_toggleChecklist_008", "FUNC_calculateNodeProgress_009"],
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_ChecklistManager_VER_1.0": {
+      "path": "src/modules/ChecklistManager.js",
+      "functions": ["FUNC_manageChecklist_001", "FUNC_toggleChecklistItem_002", "FUNC_addChecklistItem_003", "FUNC_addChecklistItemInAccordion_004", "FUNC_removeChecklistItem_005", "FUNC_removeChecklistItemInAccordion_006", "FUNC_editChecklistItem_007", "FUNC_editChecklistItemInAccordion_008", "FUNC_renderChecklist_009", "FUNC_saveChecklist_010", "FUNC_getTechnology_011"],
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_AuthManager_VER_1.0": {
+      "path": "src/modules/AuthManager.js",
+      "functions": ["FUNC_testAuth_001", "FUNC_saveAuth_002", "FUNC_loadAuth_003", "FUNC_loadFromGitHub_004", "FUNC_saveToGitHub_005", "FUNC_forceSync_006", "FUNC_enableAutoSave_007", "FUNC_disableAutoSave_008", "FUNC_toggleAutoSave_009", "FUNC_updateAutoSaveButton_010", "FUNC_autoSaveToGitHub_011", "FUNC_mergeData_012", "FUNC_mergeTechnologies_013", "FUNC_mergeChecklists_014", "FUNC_handleSyncConflict_015", "FUNC_loadFromGitHubWithMerge_016", "FUNC_showAutoSaveNotification_017", "FUNC_scheduleAutoSave_018", "FUNC_updateSyncStatus_019"],
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_KnowledgeManager_VER_1.0": {
+      "path": "src/modules/KnowledgeManager.js",
+      "functions": ["FUNC_openKnowledgeBase_001", "FUNC_switchTab_002", "FUNC_renderPreview_003", "FUNC_processInternalLinks_004", "FUNC_navigateToInternalLink_005", "FUNC_findPathToTechnology_006", "FUNC_renderMedia_007", "FUNC_renderLinks_008", "FUNC_getAllTechnologies_009", "FUNC_findTechnologyByName_010", "FUNC_findTechnologyById_011", "FUNC_toggleLink_012", "FUNC_deleteMedia_013", "FUNC_insertMediaToEditor_014", "FUNC_saveContent_015", "FUNC_exportContent_016", "FUNC_importContent_017", "FUNC_showGlobalSearch_018", "FUNC_performSearch_019", "FUNC_searchInKnowledgeBase_020", "FUNC_scheduleSave_021", "FUNC_handleFiles_022", "FUNC_filterLinks_023", "FUNC_showInternalLinkDialog_024", "FUNC_insertInternalLink_025"],
+      "dependencies": ["MODULE_DataManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_KnowledgeEditor_VER_1.0": {
+      "path": "src/modules/KnowledgeEditor.js",
+      "functions": ["FUNC_initKeyboardShortcuts_001", "FUNC_undo_002", "FUNC_redo_003", "FUNC_formatText_004", "FUNC_insertHeading_005", "FUNC_insertList_006", "FUNC_insertLink_007", "FUNC_insertCode_008", "FUNC_insertTable_009", "FUNC_showTableControls_010", "FUNC_hideTableControls_011", "FUNC_insertTableRow_012", "FUNC_deleteTableRow_013", "FUNC_insertTableColumn_014", "FUNC_deleteTableColumn_015", "FUNC_mergeTableCells_016", "FUNC_splitTableCell_017", "FUNC_alignCellLeft_018", "FUNC_alignCellCenter_019", "FUNC_alignCellRight_020", "FUNC_alignCell_021", "FUNC_showTableProperties_022", "FUNC_scheduleTableSave_023", "FUNC_insertImage_024", "FUNC_insertVideo_025", "FUNC_insertInternalLink_026", "FUNC_insertFootnote_027", "FUNC_getFootnoteNumber_028", "FUNC_highlightText_029", "FUNC_insertBlockQuote_030", "FUNC_insertHorizontalRule_031", "FUNC_insertCollapsibleSection_032", "FUNC_insertHtml_033", "FUNC_showColorPalette_034", "FUNC_showEmojiPanel_035", "FUNC_showFindReplace_036", "FUNC_hideFindReplace_037", "FUNC_findNext_038", "FUNC_replace_039", "FUNC_replaceAll_040", "FUNC_clearFormatting_041", "FUNC_outdent_042", "FUNC_indent_043"],
+      "dependencies": ["MODULE_KnowledgeManager_VER_1.0", "MODULE_UIManager_VER_1.0", "MODULE_DOMFactory_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_Inspector_VER_1.0": {
+      "path": "src/modules/Inspector.js",
+      "functions": ["FUNC_init_001", "FUNC_createPanel_002", "FUNC_createOverlay_003", "FUNC_attachKeyboardShortcut_004", "FUNC_activate_005", "FUNC_deactivate_006", "FUNC_handleMouseOver_007", "FUNC_handleClick_008", "FUNC_showInfo_009", "FUNC_togglePin_010", "FUNC_pinElement_011", "FUNC_copyToClipboard_012", "FUNC_toggleLiveTrace_013", "FUNC_switchTab_014", "FUNC_updateTraceView_015", "FUNC_exportReport_016", "FUNC_generateMarkdownReport_017", "FUNC_generateHTMLReport_018"],
+      "dependencies": ["MODULE_FunctionTracer_VER_1.0"],
+      "status": "active"
+    },
+    "MODULE_FunctionTracer_VER_1.0": {
+      "path": "src/modules/FunctionTracer.js",
+      "functions": ["FUNC_enable_001", "FUNC_disable_002", "FUNC_log_003", "FUNC_getTrace_004", "FUNC_filterByModule_005", "FUNC_filterByFunction_006", "FUNC_clear_007", "FUNC_export_008", "FUNC_getSlowest_009", "FUNC_getStats_010"],
+      "dependencies": [],
+      "status": "active"
+    },
+    "MODULE_DependencyValidator_VER_1.0": {
+      "path": "src/modules/DependencyValidator.js",
+      "functions": ["FUNC_validate_001", "FUNC_findCycles_002", "FUNC_checkLayerViolations_003", "FUNC_findOrphanModules_004", "FUNC_buildGraph_005", "FUNC_getModuleLayer_006", "FUNC_loadRegistry_007", "FUNC_loadDependencies_008", "FUNC_loadLayers_009", "FUNC_generateReport_010"],
+      "dependencies": [],
+      "status": "active",
+      "layer": "LAYER_1_CORE"
+    },
+    "MODULE_DOMFactory_VER_1.0": {
+      "path": "src/modules/DOMFactory.js",
+      "functions": ["FUNC_create_001", "FUNC_button_002", "FUNC_log_003", "FUNC_get_004", "FUNC_getByModule_005", "FUNC_clear_006"],
+      "dependencies": [],
+      "dependents": ["MODULE_AccordionManager_VER_1.0", "MODULE_ChecklistManager_VER_1.0", "MODULE_KnowledgeManager_VER_1.0", "MODULE_KnowledgeEditor_VER_1.0"],
+      "status": "active",
+      "layer": "LAYER_1_CORE"
+    }
+  },
+  "totalModules": 11,
+  "totalFunctions": 214,
+  "architecture": "layered-modular",
+  "standards": "PromAi",
+  "improvements": {
+    "phase1": {
+      "functionRegistry": "completed",
+      "domFactory": "completed",
+      "architectureLayers": "completed",
+      "dependencyValidator": "completed",
+      "status": "completed",
+      "progress": "100%"
+    },
+    "phase2": {
+      "contextPack": "completed",
+      "idMapper": "completed",
+      "contextLayers": "completed",
+      "changelogCompact": "completed",
+      "status": "completed",
+      "progress": "100%"
+    },
+    "phase3": {
+      "metrics": "completed",
+      "completionReport": "completed",
+      "domCreatorMap": "completed",
+      "functionRegistryComplete": "completed",
+      "accordionRefactored": "completed",
+      "traceLog": "completed",
+      "inspectorLiveTrace": "completed",
+      "inspectorExport": "completed",
+      "status": "completed",
+      "progress": "100%"
+    },
+    "allPhasesCompleted": true,
+    "phase1Complete": true,
+    "phase3Complete": true
+  }
+}
