@@ -77,7 +77,8 @@
         let editor;
         
         window.addEventListener('load', function() {
-            editor = new EditorJS({
+            setTimeout(() => {
+                editor = new EditorJS({
                 holder: 'editorjs',
                 placeholder: 'Начните писать...',
                 tools: {
@@ -110,6 +111,7 @@
                     raw: RawTool
                 }
             });
+            }, 500);
         });
         
         async function saveData() {
