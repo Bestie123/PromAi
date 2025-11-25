@@ -114,7 +114,7 @@
         async function loadData() {
             const stored = localStorage.getItem('editorjs-data');
             if (stored) {
-                editor.destroy();
+                await editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
                     tools: {
@@ -137,9 +137,9 @@
         }
         
         // Очистка редактора
-        function clearData() {
+        async function clearData() {
             if (confirm('Очистить редактор?')) {
-                editor.destroy();
+                await editor.destroy();
                 editor = new EditorJS({
                     holder: 'editorjs',
                     tools: {
