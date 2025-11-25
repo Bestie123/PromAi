@@ -149,30 +149,72 @@
         
         async function showPreview() {
             try {
-                if (!editor || !editor.save) {
-                    alert('⚠️ Редактор не готов');
+                const data = await editor.save();
+                const preview = document.getElementById('preview');
+                
+                if (!data.blocks || data.blocks.length === 0) {
+                    preview.innerHTML = '<p style="color: #999;">📝 Редактор пуст. Добавьте контент.</p>';
+                    preview.style.display = 'block';
                     return;
                 }
                 
-                const data = await editor.save();
-                const preview = document.getElementById('preview');
-                preview.innerHTML = '';
-                
-                let hasContent = false;
+                let html = '';
                 data.blocks.forEach(block => {
-                    if (block.type === 'raw' && block.data.html) {
-                        preview.innerHTML += block.data.html;
-                        hasContent = true;
+                    switch(block.type) {
+                        case 'header':
+                            if (block.data.text && block.data.text.trim()) {
+                                html += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+                            }
+                            break;
+                        case 'paragraph':
+                            if (block.data.text && block.data.text.trim()) {
+                                html += `<p>${block.data.text}</p>`;
+                            }
+                            break;
+                        case 'list':
+                            if (block.data.items && block.data.items.length > 0) {
+                                const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
+                                html += `<${tag}>${block.data.items.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
+                            }
+                            break;
+                        case 'checklist':
+                            if (block.data.items && block.data.items.length > 0) {
+                                html += `<ul>${block.data.items.map(i => `<li><input type="checkbox" ${i.checked ? 'checked' : ''}> ${i.text}</li>`).join('')}</ul>`;
+                            }
+                            break;
+                        case 'quote':
+                            if (block.data.text && block.data.text.trim()) {
+                                html += `<blockquote>${block.data.text}<cite>${block.data.caption || ''}</cite></blockquote>`;
+                            }
+                            break;
+                        case 'code':
+                            if (block.data.code && block.data.code.trim()) {
+                                html += `<pre><code>${block.data.code}</code></pre>`;
+                            }
+                            break;
+                        case 'delimiter':
+                            html += '<hr>';
+                            break;
+                        case 'table':
+                            if (block.data.content && block.data.content.length > 0) {
+                                html += `<table border="1">${block.data.content.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</table>`;
+                            }
+                            break;
+                        case 'raw':
+                            if (block.data.html && block.data.html.trim()) {
+                                html += block.data.html;
+                            }
+                            break;
                     }
                 });
                 
-                if (hasContent) {
-                    preview.style.display = 'block';
+                if (!html || html.trim() === '') {
+                    preview.innerHTML = '<p style="color: #999;">📝 Редактор содержит только пустые блоки. Добавьте текст.</p>';
                 } else {
-                    alert('⚠️ Нет HTML контента для предпросмотра');
+                    preview.innerHTML = html;
                 }
+                preview.style.display = 'block';
             } catch (error) {
-                console.error('Ошибка предпросмотра:', error);
                 alert('❌ Ошибка: ' + error.message);
             }
         }
