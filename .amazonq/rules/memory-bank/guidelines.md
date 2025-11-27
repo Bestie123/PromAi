@@ -1002,3 +1002,27 @@ Modules extensible through:
 - Document new functions with FUNC_ID
 - Validate dependencies with DependencyValidator
 - Keep modules focused and cohesive
+
+## File Size Constraints
+
+### Module Files
+- **Maximum 1000 lines** per module file
+- **Maximum 100 lines** per function
+- **Maximum 5 parameters** per function
+- **One file = One module = One responsibility**
+
+### When to Split
+If module exceeds 1000 lines:
+1. Identify logical submodules
+2. Extract to separate files (e.g., `MODULE_Name_Core`, `MODULE_Name_Utils`)
+3. Update dependencies in both modules
+4. Maintain single responsibility principle
+
+### Example Split
+```javascript
+// Before: MODULE_Large_VER_1.0 (1500 lines)
+
+// After:
+// MODULE_Large_Core_VER_1.0 (800 lines) - core functionality
+// MODULE_Large_Utils_VER_1.0 (700 lines) - utility functions
+```
