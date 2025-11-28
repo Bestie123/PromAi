@@ -1006,13 +1006,14 @@ Modules extensible through:
 ## File Size Constraints
 
 ### Module Files
-- **Maximum 1000 lines** per module file
-- **Maximum 100 lines** per function
-- **Maximum 5 parameters** per function
+- **Optimal: 300-500 lines** per module file (maximum 1000)
+- **Optimal: 20-50 lines** per function (maximum 100)
+- **Optimal: 2-3 parameters** per function (maximum 5)
 - **One file = One module = One responsibility**
+- **AI-friendly:** Files ≤500 lines are fully readable in one request
 
 ### When to Split
-If module exceeds 1000 lines:
+If module exceeds 500 lines (or 1000 maximum):
 1. Identify logical submodules
 2. Extract to separate files (e.g., `MODULE_Name_Core`, `MODULE_Name_Utils`)
 3. Update dependencies in both modules
@@ -1020,9 +1021,10 @@ If module exceeds 1000 lines:
 
 ### Example Split
 ```javascript
-// Before: MODULE_Large_VER_1.0 (1500 lines)
+// Before: MODULE_Large_VER_1.0 (1500 lines) - TOO BIG!
 
 // After:
-// MODULE_Large_Core_VER_1.0 (800 lines) - core functionality
-// MODULE_Large_Utils_VER_1.0 (700 lines) - utility functions
+// MODULE_Large_Core_VER_1.0 (400 lines) - core functionality
+// MODULE_Large_Utils_VER_1.0 (350 lines) - utility functions
+// MODULE_Large_Helpers_VER_1.0 (300 lines) - helper functions
 ```
