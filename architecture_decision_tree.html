@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromAi PKM - Дерево архитектурных решений</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117; color: #c9d1d9; overflow: hidden;
+        }
+        #canvas { 
+            width: 5000px; height: 3000px; position: relative; 
+            background: radial-gradient(circle at 50% 50%, #161b22 0%, #0d1117 100%);
+        }
+        #viewport { 
+            width: 100vw; height: 100vh; overflow: hidden; position: relative;
+            cursor: grab;
+        }
+        #viewport.dragging { cursor: grabbing; }
+        
+        .node {
+            position: absolute; background: #21262d; border: 2px solid #30363d;
+            border-radius: 12px; padding: 16px; min-width: 280px; max-width: 320px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4); transition: all 0.3s ease;
+        }
+        .node:hover { transform: scale(1.05); box-shadow: 0 12px 48px rgba(0,0,0,0.6); }
+        
+        .critical { border-color: #f85149; background: linear-gradient(135deg, #21262d 0%, #2d1b1f 100%); }
+        .important { border-color: #f79009; background: linear-gradient(135deg, #21262d 0%, #2d2419 100%); }
+        .flexible { border-color: #3fb950; background: linear-gradient(135deg, #21262d 0%, #1b2d1f 100%); }
+        .question { border-color: #58a6ff; background: linear-gradient(135deg, #21262d 0%, #1b2332 100%); }
+        .rejected { border-color: #8b949e; background: linear-gradient(135deg, #21262d 0%, #2d2d2d 100%); opacity: 0.7; }
+        
+        .badge {
+            display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 11px;
+            font-weight: bold; margin-bottom: 8px;
+        }
+        .badge.critical { background: #f85149; color: #fff; }
+        .badge.important { background: #f79009; color: #fff; }
+        .badge.flexible { background: #3fb950; color: #fff; }
+        .badge.question { background: #58a6ff; color: #fff; }
+        .badge.rejected { background: #8b949e; color: #fff; }
+        
+        .node h3 { font-size: 14px; margin-bottom: 8px; color: #f0f6fc; }
+        .node p { font-size: 12px; line-height: 1.4; margin-bottom: 8px; color: #8b949e; }
+        .details { font-size: 11px; color: #6e7681; }
+        
+        .connection {
+            position: absolute; background: #30363d; height: 2px; transform-origin: left center;
+            z-index: -1;
+        }
+        .connection.critical { background: #f85149; }
+        .connection.important { background: #f79009; }
+        .connection.flexible { background: #3fb950; }
+        .connection.question { background: #58a6ff; }
+        .connection.rejected { background: #8b949e; }
+        
+        .compatibility-line {
+            transition: opacity 0.3s ease;
+        }
+        .compatibility-line:hover {
+            opacity: 1 !important;
+        }
+        
+        .controls {
+            position: fixed; top: 20px; left: 20px; z-index: 1000;
+            background: rgba(33, 38, 45, 0.9); padding: 12px; border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        .controls button {
+            background: #238636; color: #fff; border: none; padding: 8px 12px;
+            border-radius: 6px; margin-right: 8px; cursor: pointer; font-size: 12px;
+        }
+        .controls button:hover { background: #2ea043; }
+        
+        .zoom-info {
+            position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+            background: rgba(33, 38, 45, 0.9); padding: 8px 12px; border-radius: 6px;
+            border: 1px solid #30363d; font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="resetView()">Сброс</button>
+        <button onclick="centerView()">Центр</button>
+        <span style="color: #8b949e; margin-left: 12px;">Колесо мыши - зум | ЛКМ - перетаскивание</span>
+    </div>
+    
+    <div class="zoom-info">
+        Зум: <span id="zoomLevel">100%</span>
+    </div>
+    
+    <div id="viewport">
+        <div id="canvas"></div>
+    </div>
+
+    <script>
+        const nodes = [
+            // Корневой вопрос
+            {
+                id: 'root-question', x: 2500, y: 100, type: 'question',
+                title: '❓ Какую архитектуру выбрать?',
+                description: 'Основной архитектурный выбор для PKM системы',
+                details: 'Варианты: Модульная | Монолитная | Микросервисная',
+                children: ['modular-arch', 'monolith-arch']
+            },
+            {
+                id: 'modular-arch', x: 2200, y: 300, type: 'critical',
+                title: '✅ Модульная архитектура',
+                description: 'Ядро отделено от UI и плагинов',
+                details: 'Влияние: Легкое тестирование, замена UI, мобильные версии',
+                children: ['uuid-question']
+            },
+            {
+                id: 'monolith-arch', x: 2800, y: 300, type: 'rejected',
+                title: '❌ Монолитная',
+                description: 'Всё в одном модуле',
+                details: 'Влияние: Быстрый старт, но сложность роста',
+                children: []
+            },
+            {
+                id: 'uuid-question', x: 2200, y: 500, type: 'question',
+                title: '❓ UUID v4 или v7?',
+                description: 'Выбор версии UUID для блоков',
+                details: 'Варианты: UUID v4 | UUID v7 | Кастомные ID',
+                children: ['uuid-v4', 'uuid-v7']
+            },
+            {
+                id: 'uuid-v4', x: 1900, y: 700, type: 'critical',
+                title: '🎲 UUID v4',
+                description: 'Случайные UUID',
+                details: 'Влияние: Проверенные временем, полная случайность',
+                children: ['crdt-question']
+            },
+            {
+                id: 'uuid-v7', x: 2500, y: 700, type: 'important',
+                title: '⏰ UUID v7',
+                description: 'UUID с timestamp',
+                details: 'Влияние: Лучше для сортировки, содержат время',
+                children: ['crdt-question']
+            },
+            {
+                id: 'crdt-question', x: 2200, y: 900, type: 'question',
+                title: '❓ Какую CRDT использовать?',
+                description: 'Выбор системы для синхронизации данных',
+                details: 'Варианты: Yjs | Automerge | Собственная',
+                children: ['yjs-choice', 'automerge-choice', 'custom-crdt']
+            },
+            {
+                id: 'yjs-choice', x: 1800, y: 1100, type: 'critical',
+                title: '✅ Yjs',
+                description: 'Быстрая, популярная CRDT',
+                details: '➕ Плюсы: Высокая производительность, WebRTC, большая экосистема \n➖ Минусы: Сложность API, большой размер \n🔗 Несовместимо с Automerge',
+                children: ['storage-question']
+            },
+            {
+                id: 'automerge-choice', x: 2200, y: 1100, type: 'important',
+                title: '⚡ Automerge',
+                description: 'Функциональная CRDT',
+                details: '➕ Плюсы: Простота API, иммутабельность, меньше багов \n➖ Минусы: Медленнее Yjs, меньше плагинов \n🔗 Несовместимо с Yjs',
+                children: ['storage-question']
+            },
+            {
+                id: 'custom-crdt', x: 2600, y: 1100, type: 'rejected',
+                title: '❌ Собственная',
+                description: 'Написать свою CRDT',
+                details: '➕ Плюсы: Полный контроль, оптимизация под задачи \n➖ Минусы: Огромная сложность, годы разработки \n🔗 Можно совместить с любым',
+                children: []
+            },
+            {
+                id: 'storage-question', x: 2000, y: 1300, type: 'question',
+                title: '❓ Как хранить данные?',
+                description: 'Выбор формата локального хранения',
+                details: 'Варианты: JSON | SQLite | Гибридный',
+                children: ['json-storage', 'sqlite-storage', 'hybrid-storage']
+            },
+            {
+                id: 'json-storage', x: 1600, y: 1500, type: 'critical',
+                title: '✅ JSON файлы',
+                description: 'Человекочитаемый формат',
+                details: '➕ Плюсы: Прозрачность, простой экспорт, скрипты \n➖ Минусы: Медленные запросы, нет индексов \n🔗 Можно совместить с SQLite',
+                children: ['rich-text-question']
+            },
+            {
+                id: 'sqlite-storage', x: 2000, y: 1500, type: 'important',
+                title: '⚡ SQLite',
+                description: 'Реляционная БД',
+                details: '➕ Плюсы: Быстрые запросы, индексы, транзакции \n➖ Минусы: Нечитаемый формат, сложность скриптов \n🔗 Можно совместить с JSON',
+                children: ['rich-text-question']
+            },
+            {
+                id: 'hybrid-storage', x: 2400, y: 1500, type: 'flexible',
+                title: '🔄 Гибридный',
+                description: 'JSON + SQLite индексы',
+                details: '➕ Плюсы: Лучшее из двух миров, гибкость \n➖ Минусы: Сложность синхронизации, два формата \n🔗 Комбинирует JSON + SQLite',
+                children: ['rich-text-question']
+            },
+            {
+                id: 'rich-text-question', x: 2000, y: 1700, type: 'question',
+                title: '❓ Как реализовать Rich Text?',
+                description: 'Система богатого текста',
+                details: 'Варианты: Markdown + сущности | WYSIWYG | Гибрид',
+                children: ['markdown-entities', 'wysiwyg-editor']
+            },
+            {
+                id: 'markdown-entities', x: 1700, y: 1900, type: 'critical',
+                title: '📝 Markdown + сущности',
+                description: 'Markdown + ссылки/блоки',
+                details: 'Влияние: Простота, читаемость, расширяемость',
+                children: ['refs-question']
+            },
+            {
+                id: 'wysiwyg-editor', x: 2300, y: 1900, type: 'important',
+                title: '✏️ WYSIWYG',
+                description: 'Визуальный редактор',
+                details: 'Влияние: Удобство, сложность реализации',
+                children: ['refs-question']
+            },
+            {
+                id: 'refs-question', x: 2000, y: 2100, type: 'question',
+                title: '❓ Как хранить ссылки?',
+                description: 'Refs/backlinks в CRDT',
+                details: 'Варианты: CRDT структура | В тексте | Гибрид',
+                children: ['crdt-refs', 'hybrid-refs']
+            },
+            {
+                id: 'crdt-refs', x: 1700, y: 2300, type: 'critical',
+                title: '🔗 CRDT структура',
+                description: 'Ссылки как CRDT объекты',
+                details: 'Влияние: Быстрые запросы, надежность',
+                children: ['ui-question']
+            },
+            {
+                id: 'hybrid-refs', x: 2300, y: 2300, type: 'important',
+                title: '🔄 Гибрид',
+                description: 'Текст + CRDT индекс',
+                details: 'Влияние: Баланс производительности/простоты',
+                children: ['ui-question']
+            },
+            {
+                id: 'ui-question', x: 2000, y: 2500, type: 'question',
+                title: '❓ Какой UI фреймворк?',
+                description: 'Выбор технологии для декларативного UI',
+                details: 'Варианты: React | Vue | Svelte | Собственный',
+                children: ['react-choice', 'vue-choice', 'svelte-choice']
+            },
+            {
+                id: 'react-choice', x: 1600, y: 2700, type: 'flexible',
+                title: '⚛️ React',
+                description: 'Популярный, большая экосистема',
+                details: 'Влияние: Быстрая разработка, много библиотек',
+                children: ['performance-question']
+            },
+            {
+                id: 'vue-choice', x: 2000, y: 2700, type: 'flexible',
+                title: '🟢 Vue',
+                description: 'Простой, меньше бойлерплейта',
+                details: 'Влияние: Легче изучение, хорошая производительность',
+                children: ['performance-question']
+            },
+            {
+                id: 'svelte-choice', x: 2400, y: 2700, type: 'flexible',
+                title: '🔥 Svelte',
+                description: 'Компиляция, высокая производительность',
+                details: 'Влияние: Меньший размер бандла, быстрый рендер',
+                children: ['performance-question']
+            },
+            {
+                id: 'performance-question', x: 2000, y: 2900, type: 'question',
+                title: '❓ Virtual scrolling для 100k+ блоков?',
+                description: 'Обеспечение производительности',
+                details: 'Варианты: Virtual scrolling | Ленивая загрузка',
+                children: ['virtual-scrolling', 'lazy-loading']
+            },
+            {
+                id: 'virtual-scrolling', x: 1700, y: 3100, type: 'critical',
+                title: '📜 Virtual scrolling',
+                description: 'Рендер только видимых',
+                details: 'Влияние: 100k+ блоков, сложность',
+                children: ['web-workers-question']
+            },
+            {
+                id: 'lazy-loading', x: 2300, y: 3100, type: 'important',
+                title: '⚡ Ленивая загрузка',
+                description: 'Загрузка по требованию',
+                details: 'Влияние: Быстрый старт, задержки',
+                children: ['web-workers-question']
+            },
+            {
+                id: 'web-workers-question', x: 2000, y: 3300, type: 'question',
+                title: '❓ Web Workers для тяжелых операций?',
+                description: 'Поиск, индексация, вычисления',
+                details: 'Варианты: Все в Workers | Только поиск | Основной поток',
+                children: ['all-workers', 'search-workers', 'main-thread']
+            },
+            {
+                id: 'all-workers', x: 1500, y: 3500, type: 'critical',
+                title: '👷 Все в Workers',
+                description: 'Поиск, индексация, CRDT',
+                details: '➕ Плюсы: Отзывчивый UI, масштабируемость \n➖ Минусы: Сложность API, сериализация',
+                children: ['search-question']
+            },
+            {
+                id: 'search-workers', x: 2000, y: 3500, type: 'important',
+                title: '🔍 Только поиск',
+                description: 'Поиск и индексация в Workers',
+                details: '➕ Плюсы: Простота, меньше сложности \n➖ Минусы: Ограниченная производительность',
+                children: ['search-question']
+            },
+            {
+                id: 'main-thread', x: 2500, y: 3500, type: 'rejected',
+                title: '❌ Основной поток',
+                description: 'Все операции в UI',
+                details: '➕ Плюсы: Простота разработки \n➖ Минусы: Зависания UI, немасштабируемость',
+                children: []
+            },
+            
+            // UUID система
+            {
+                id: 'uuid-question', x: 2000, y: 2100, type: 'question',
+                title: '❓ UUID v4 или v7?',
+                description: 'Выбор версии UUID для блоков',
+                details: 'Варианты: UUID v4 | UUID v7 | Кастомные ID',
+                children: ['uuid-v4', 'uuid-v7']
+            },
+            {
+                id: 'uuid-v4', x: 1700, y: 2300, type: 'critical',
+                title: '🎲 UUID v4',
+                description: 'Случайные UUID',
+                details: 'Влияние: Проверенные временем, полная случайность',
+                children: ['rich-text-question']
+            },
+            {
+                id: 'uuid-v7', x: 2300, y: 2300, type: 'important',
+                title: '⏰ UUID v7',
+                description: 'UUID с timestamp',
+                details: 'Влияние: Лучше для сортировки, содержат время',
+                children: ['rich-text-question']
+            },
+            
+            // Rich Text
+            {
+                id: 'rich-text-question', x: 2000, y: 2500, type: 'question',
+                title: '❓ Как реализовать Rich Text?',
+                description: 'Система богатого текста',
+                details: 'Варианты: Markdown + сущности | WYSIWYG | Гибрид',
+                children: ['markdown-entities', 'wysiwyg-editor']
+            },
+            {
+                id: 'markdown-entities', x: 1700, y: 2700, type: 'critical',
+                title: '📝 Markdown + сущности',
+                description: 'Markdown + ссылки/блоки',
+                details: 'Влияние: Простота, читаемость, расширяемость',
+                children: ['refs-question']
+            },
+            {
+                id: 'wysiwyg-editor', x: 2300, y: 2700, type: 'important',
+                title: '✏️ WYSIWYG',
+                description: 'Визуальный редактор',
+                details: 'Влияние: Удобство, сложность реализации',
+                children: ['refs-question']
+            },
+            
+            // Ссылки в CRDT
+            {
+                id: 'refs-question', x: 2000, y: 2900, type: 'question',
+                title: '❓ Как хранить ссылки?',
+                description: 'Refs/backlinks в CRDT',
+                details: 'Варианты: CRDT структура | В тексте | Гибрид',
+                children: ['crdt-refs', 'hybrid-refs']
+            },
+            {
+                id: 'crdt-refs', x: 1700, y: 3100, type: 'critical',
+                title: '🔗 CRDT структура',
+                description: 'Ссылки как CRDT объекты',
+                details: 'Влияние: Быстрые запросы, надежность',
+                children: ['performance-question']
+            },
+            {
+                id: 'hybrid-refs', x: 2300, y: 3100, type: 'important',
+                title: '🔄 Гибрид',
+                description: 'Текст + CRDT индекс',
+                details: 'Влияние: Баланс производительности/простоты',
+                children: ['performance-question']
+            },
+            
+            // Производительность
+            {
+                id: 'performance-question', x: 2000, y: 3300, type: 'question',
+                title: '❓ Virtual scrolling для 100k+ блоков?',
+                description: 'Обеспечение производительности',
+                details: 'Варианты: Virtual scrolling | Ленивая загрузка',
+                children: ['virtual-scrolling', 'lazy-loading']
+            },
+            {
+                id: 'virtual-scrolling', x: 1700, y: 3500, type: 'critical',
+                title: '📜 Virtual scrolling',
+                description: 'Рендер только видимых',
+                details: 'Влияние: 100k+ блоков, сложность',
+                children: ['ux-features']
+            },
+            {
+                id: 'lazy-loading', x: 2300, y: 3500, type: 'important',
+                title: '⚡ Ленивая загрузка',
+                description: 'Загрузка по требованию',
+                details: 'Влияние: Быстрый старт, задержки',
+                children: ['ux-features']
+            },
+            
+            // UX фичи
+            {
+                id: 'plugin-question', x: 2500, y: 3700, type: 'question',
+                title: '❓ Как изолировать плагины?',
+                description: 'Выбор системы безопасности плагинов',
+                details: 'Варианты: Web Workers | Iframe | Capability-based',
+                children: ['webworker-plugins', 'iframe-plugins', 'capability-plugins']
+            },
+            {
+                id: 'webworker-plugins', x: 2200, y: 3900, type: 'critical',
+                title: '👷 Web Workers',
+                description: 'Полная изоляция в отдельном потоке',
+                details: 'Влияние: Максимальная безопасность, сложность API',
+                children: ['event-sourcing-question']
+            },
+            {
+                id: 'iframe-plugins', x: 2500, y: 3900, type: 'important',
+                title: '🖼️ Iframe Sandbox',
+                description: 'Изоляция через iframe',
+                details: 'Влияние: Хорошая изоляция, ограничения DOM',
+                children: ['event-sourcing-question']
+            },
+            {
+                id: 'capability-plugins', x: 2800, y: 3900, type: 'flexible',
+                title: '🔐 Capability-based',
+                description: 'Система разрешений',
+                details: 'Влияние: Гибкость, нужна своя система безопасности',
+                children: ['event-sourcing-question']
+            },
+            
+            // Event Sourcing
+            {
+                id: 'event-sourcing-question', x: 2000, y: 4100, type: 'question',
+                title: '❓ Как реализовать Event Sourcing?',
+                description: 'Immutable ops log с первого дня',
+                details: 'Варианты: Отдельный лог | В CRDT | Гибрид',
+                children: ['separate-log', 'crdt-log', 'hybrid-log']
+            },
+            {
+                id: 'separate-log', x: 1500, y: 4300, type: 'critical',
+                title: '📄 Отдельный лог',
+                description: 'Операции в отдельном файле',
+                details: '➕ Плюсы: Полный аудит, легкий реплей \n➖ Минусы: Дублирование данных, синхронизация',
+                children: ['schema-question']
+            },
+            {
+                id: 'crdt-log', x: 2000, y: 4300, type: 'important',
+                title: '🔄 В CRDT',
+                description: 'Лог как часть CRDT',
+                details: '➕ Плюсы: Нет дублирования, автосинхронизация \n➖ Минусы: Сложность реплея, ограниченный аудит',
+                children: ['schema-question']
+            },
+            {
+                id: 'hybrid-log', x: 2500, y: 4300, type: 'flexible',
+                title: '🔄 Гибрид',
+                description: 'CRDT + отдельный аудит-лог',
+                details: '➕ Плюсы: Лучшее из двух миров \n➖ Минусы: Сложность реализации',
+                children: ['schema-question']
+            },
+            
+            // Schema валидация
+            {
+                id: 'schema-question', x: 2000, y: 4500, type: 'question',
+                title: '❓ Schema-first валидация?',
+                description: 'Runtime валидация схем',
+                details: 'Варианты: JSON Schema | TypeScript | Zod',
+                children: ['json-schema', 'typescript-schema', 'zod-schema']
+            },
+            {
+                id: 'json-schema', x: 1500, y: 4700, type: 'critical',
+                title: '📝 JSON Schema',
+                description: 'Стандартная валидация',
+                details: '➕ Плюсы: Стандарт, языконезависимость \n➖ Минусы: Ограниченная выразительность',
+                children: ['web-workers-question']
+            },
+            {
+                id: 'typescript-schema', x: 2000, y: 4700, type: 'important',
+                title: '🔷 TypeScript',
+                description: 'Типы как схемы',
+                details: '➕ Плюсы: Интеграция с кодом, статическая проверка \n➖ Минусы: Нет runtime валидации',
+                children: ['web-workers-question']
+            },
+            {
+                id: 'zod-schema', x: 2500, y: 4700, type: 'flexible',
+                title: '⚙️ Zod',
+                description: 'TypeScript-first валидация',
+                details: '➕ Плюсы: Runtime + compile-time, удобный API \n➖ Минусы: Дополнительная зависимость',
+                children: ['web-workers-question']
+            },
+            
+            // Web Workers
+            {
+                id: 'web-workers-question', x: 2000, y: 4900, type: 'question',
+                title: '❓ Web Workers для тяжелых операций?',
+                description: 'Поиск, индексация, вычисления',
+                details: 'Варианты: Все в Workers | Только поиск | Основной поток',
+                children: ['all-workers', 'search-workers', 'main-thread']
+            },
+            {
+                id: 'all-workers', x: 1500, y: 5100, type: 'critical',
+                title: '👷 Все в Workers',
+                description: 'Поиск, индексация, CRDT',
+                details: '➕ Плюсы: Отзывчивый UI, масштабируемость \n➖ Минусы: Сложность API, сериализация',
+                children: ['e2ee-question']
+            },
+            {
+                id: 'search-workers', x: 2000, y: 5100, type: 'important',
+                title: '🔍 Только поиск',
+                description: 'Поиск и индексация в Workers',
+                details: '➕ Плюсы: Простота, меньше сложности \n➖ Минусы: Ограниченная производительность',
+                children: ['e2ee-question']
+            },
+            {
+                id: 'main-thread', x: 2500, y: 5100, type: 'rejected',
+                title: '❌ Основной поток',
+                description: 'Все операции в UI',
+                details: '➕ Плюсы: Простота разработки \n➖ Минусы: Зависания UI, немасштабируемость',
+                children: []
+            },
+            
+            // E2EE готовность
+            {
+                id: 'e2ee-question', x: 2000, y: 5300, type: 'question',
+                title: '❓ E2EE-ready формат?',
+                description: 'Готовность к шифрованию',
+                details: 'Варианты: С первого дня | Потом | Не нужно',
+                children: ['e2ee-ready', 'e2ee-later', 'no-e2ee']
+            },
+            {
+                id: 'e2ee-ready', x: 1500, y: 5500, type: 'critical',
+                title: '🔒 С первого дня',
+                description: 'Архитектура готова к E2EE',
+                details: '➕ Плюсы: Никаких breaking changes потом \n➖ Минусы: Усложнение архитектуры',
+                children: ['circular-detection']
+            },
+            {
+                id: 'e2ee-later', x: 2000, y: 5500, type: 'important',
+                title: '⏳ Потом',
+                description: 'Добавим позже',
+                details: '➕ Плюсы: Простота старта \n➖ Минусы: Сложная миграция всех баз',
+                children: ['circular-detection']
+            },
+            {
+                id: 'no-e2ee', x: 2500, y: 5500, type: 'rejected',
+                title: '❌ Не нужно',
+                description: 'Локальное приложение',
+                details: '➕ Плюсы: Максимальная простота \n➖ Минусы: Нет синхронизации, ограниченная аудитория',
+                children: []
+            },
+            
+            // Circular Reference Detection
+            {
+                id: 'circular-detection', x: 1750, y: 5700, type: 'question',
+                title: '❓ Обнаружение циклов?',
+                description: 'Circular Reference Detection',
+                details: 'Варианты: При рендере | При создании | Оба',
+                children: ['render-detection', 'creation-detection']
+            },
+            {
+                id: 'render-detection', x: 1500, y: 5900, type: 'critical',
+                title: '🔄 При рендере',
+                description: 'Проверка при отображении',
+                details: '➕ Плюсы: Надежность, нет крашей \n➖ Минусы: Накладные расходы',
+                children: []
+            },
+            {
+                id: 'creation-detection', x: 2000, y: 5900, type: 'important',
+                title: '⚙️ При создании',
+                description: 'Предотвращение создания циклов',
+                details: '➕ Плюсы: Проактивность, меньше накладных \n➖ Минусы: Ограничения UX, сложность',
+                children: ['autosave-question']
+            },
+            
+            // Автосохранение
+            {
+                id: 'autosave-question', x: 2000, y: 6100, type: 'question',
+                title: '❓ Автосохранение + snapshots?',
+                description: 'Каждые 3-5 сек + версии',
+                details: 'Варианты: Постоянно | По событиям | Ручное',
+                children: ['continuous-save', 'event-save', 'manual-save']
+            },
+            {
+                id: 'continuous-save', x: 1500, y: 6300, type: 'critical',
+                title: '⏰ Постоянное',
+                description: 'Каждые 3-5 сек + snapshots',
+                details: '➕ Плюсы: Никогда не потерять данные \n➖ Минусы: Накладные расходы, частые записи',
+                children: ['collapse-question']
+            },
+            {
+                id: 'event-save', x: 2000, y: 6300, type: 'important',
+                title: '⚡ По событиям',
+                description: 'При изменениях + таймер',
+                details: '➕ Плюсы: Оптимальная частота, меньше накладных \n➖ Минусы: Сложность логики, риск потери',
+                children: ['collapse-question']
+            },
+            {
+                id: 'manual-save', x: 2500, y: 6300, type: 'rejected',
+                title: '❌ Ручное',
+                description: 'Ctrl+S или кнопка',
+                details: '➕ Плюсы: Полный контроль пользователя \n➖ Минусы: Риск потери данных, плохой UX',
+                children: []
+            },
+            
+            // Коллапс/разворот
+            {
+                id: 'collapse-question', x: 1750, y: 6500, type: 'question',
+                title: '❓ Коллапс/разворот блоков?',
+                description: 'Bullet threading + сворачивание',
+                details: 'Варианты: Любые блоки | Только списки | Нет',
+                children: ['any-collapse', 'list-collapse', 'no-collapse']
+            },
+            {
+                id: 'any-collapse', x: 1300, y: 6700, type: 'critical',
+                title: '📁 Любые блоки',
+                description: 'Коллапс любого блока с детьми',
+                details: '➕ Плюсы: Максимальная гибкость, читаемость \n➖ Минусы: Сложность UI, производительность',
+                children: ['aliases-question']
+            },
+            {
+                id: 'list-collapse', x: 1750, y: 6700, type: 'important',
+                title: '📋 Только списки',
+                description: 'Коллапс только списков',
+                details: '➕ Плюсы: Простота реализации, привычность \n➖ Минусы: Ограниченная гибкость',
+                children: ['aliases-question']
+            },
+            {
+                id: 'no-collapse', x: 2200, y: 6700, type: 'rejected',
+                title: '❌ Нет',
+                description: 'Никакого сворачивания',
+                details: '➕ Плюсы: Максимальная простота \n➖ Минусы: Нечитаемые длинные документы',
+                children: []
+            },
+            
+            // Алиасы блоков
+            {
+                id: 'aliases-question', x: 1525, y: 6900, type: 'question',
+                title: '❓ Алиасы [[Person/Ivan]]?',
+                description: 'Человекочитаемые ссылки',
+                details: 'Варианты: Персистентные | Автогенерация | Только UUID',
+                children: ['persistent-aliases', 'auto-aliases', 'uuid-only']
+            },
+            {
+                id: 'persistent-aliases', x: 1200, y: 7100, type: 'critical',
+                title: '🏷️ Персистентные',
+                description: 'Пользователь создает алиасы',
+                details: '➕ Плюсы: Полный контроль, стабильность \n➖ Минусы: Дополнительная работа, конфликты',
+                children: ['media-question']
+            },
+            {
+                id: 'auto-aliases', x: 1525, y: 7100, type: 'important',
+                title: '⚙️ Автогенерация',
+                description: 'Автоматические алиасы',
+                details: '➕ Плюсы: Никакой дополнительной работы \n➖ Минусы: Непредсказуемость, коллизии',
+                children: ['media-question']
+            },
+            {
+                id: 'uuid-only', x: 1850, y: 7100, type: 'rejected',
+                title: '❌ Только UUID',
+                description: 'Никаких алиасов',
+                details: '➕ Плюсы: Максимальная простота \n➖ Минусы: Пользователи путаются в UUID',
+                children: []
+            },
+            
+            // Медиа блоки
+            {
+                id: 'media-question', x: 1362, y: 7300, type: 'question',
+                title: '❓ Медиа блоки?',
+                description: 'Изображения, видео, аудио',
+                details: 'Варианты: Нативные | Плагины | Ссылки',
+                children: ['native-media', 'plugin-media', 'link-media']
+            },
+            {
+                id: 'native-media', x: 1000, y: 7500, type: 'critical',
+                title: '🖼️ Нативные',
+                description: 'Встроенная поддержка медиа',
+                details: '➕ Плюсы: Лучший UX, единое хранилище \n➖ Минусы: Усложнение ядра, размер бандла',
+                children: ['tables-question']
+            },
+            {
+                id: 'plugin-media', x: 1362, y: 7500, type: 'important',
+                title: '🔌 Плагины',
+                description: 'Медиа через плагины',
+                details: '➕ Плюсы: Модульность, расширяемость \n➖ Минусы: Сложность установки, неконсистентность',
+                children: ['tables-question']
+            },
+            {
+                id: 'link-media', x: 1724, y: 7500, type: 'rejected',
+                title: '❌ Ссылки',
+                description: 'Только ссылки на файлы',
+                details: '➕ Плюсы: Максимальная простота \n➖ Минусы: Плохой UX, разрыв знаний',
+                children: []
+            },
+            
+            // Таблицы
+            {
+                id: 'tables-question', x: 1181, y: 7700, type: 'question',
+                title: '❓ Таблицы с объединением ячеек?',
+                description: 'Расширенные возможности таблиц',
+                details: 'Варианты: Полные | Простые | Нет',
+                children: ['full-tables', 'simple-tables', 'no-tables']
+            },
+            {
+                id: 'full-tables', x: 900, y: 7900, type: 'critical',
+                title: '📋 Полные',
+                description: 'Объединение ячеек + подстановка',
+                details: '➕ Плюсы: Мощные возможности, замена Excel \n➖ Минусы: Огромная сложность реализации',
+                children: []
+            },
+            {
+                id: 'simple-tables', x: 1181, y: 7900, type: 'important',
+                title: '📋 Простые',
+                description: 'Обычные таблицы',
+                details: '➕ Плюсы: Простота реализации, достаточность \n➖ Минусы: Ограниченные возможности',
+                children: []
+            },
+            {
+                id: 'no-tables', x: 1462, y: 7900, type: 'rejected',
+                title: '❌ Нет',
+                description: 'Никаких таблиц',
+                details: '➕ Плюсы: Максимальная простота \n➖ Минусы: Нужно идти в Excel для табличных данных',
+                children: []
+            },
+            
+            {
+                id: 'search-question', x: 1750, y: 3700, type: 'question',
+                title: '❓ Как реализовать поиск?',
+                description: 'Выбор поисковой системы',
+                details: 'Варианты: Tantivy WASM | Lunr.js | Собственная',
+                children: ['tantivy-search', 'lunr-search']
+            },
+            {
+                id: 'tantivy-search', x: 1500, y: 3900, type: 'important',
+                title: '🦀 Tantivy WASM',
+                description: 'Быстрый поиск на Rust',
+                details: 'Влияние: Высокая скорость, большой размер бандла',
+                children: ['event-sourcing-question']
+            },
+            {
+                id: 'lunr-search', x: 2000, y: 3900, type: 'flexible',
+                title: '🔍 Lunr.js',
+                description: 'Легкий JS поиск',
+                details: 'Влияние: Малый размер, медленнее на больших данных',
+                children: ['event-sourcing-question']
+            },
+
+        ];
+
+        let scale = 0.25;
+        let translateX = -500;
+        let translateY = -25;
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+        function createNode(node) {
+            const div = document.createElement('div');
+            div.className = `node ${node.type}`;
+            div.style.left = node.x + 'px';
+            div.style.top = node.y + 'px';
+            
+            const badge = node.type === 'critical' ? 'КРИТИЧНО' : 
+                         node.type === 'important' ? 'ВАЖНО' : 
+                         node.type === 'flexible' ? 'ГИБКО' :
+                         node.type === 'question' ? 'ВОПРОС' : 'ОТКЛОНЕНО';
+            
+            div.innerHTML = `
+                <div class="badge ${node.type}">${badge}</div>
+                <h3>${node.title}</h3>
+                <p>${node.description}</p>
+                <div class="details">${node.details}</div>
+            `;
+            
+            return div;
+        }
+
+        function createConnection(from, to, type) {
+            const line = document.createElement('div');
+            line.className = `connection ${type}`;
+            
+            const dx = to.x - from.x;
+            const dy = to.y - from.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            line.style.left = (from.x + 160) + 'px';
+            line.style.top = (from.y + 60) + 'px';
+            line.style.width = length + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            // Добавляем подпись к линии
+            const label = document.createElement('div');
+            label.style.position = 'absolute';
+            label.style.left = (length / 2 - 20) + 'px';
+            label.style.top = '-20px';
+            label.style.fontSize = '10px';
+            label.style.color = '#8b949e';
+            label.style.background = 'rgba(13, 17, 23, 0.8)';
+            label.style.padding = '2px 4px';
+            label.style.borderRadius = '3px';
+            label.style.whiteSpace = 'nowrap';
+            
+            const labelText = from.type === 'question' ? 
+                (to.type === 'critical' ? '✅ Выбрано' : 
+                 to.type === 'important' ? '⚡ Альтернатива' : 
+                 to.type === 'rejected' ? '❌ Отклонено' : '🔄 Вариант') : 'Ведет к';
+            
+            label.textContent = labelText;
+            line.appendChild(label);
+            
+            return line;
+        }
+        
+        function createCompatibilityLine(from, to, compatible, label) {
+            const line = document.createElement('div');
+            line.className = 'compatibility-line';
+            line.style.position = 'absolute';
+            line.style.height = compatible ? '4px' : '2px';
+            line.style.background = compatible ? '#3fb950' : '#f85149';
+            line.style.opacity = compatible ? '0.8' : '0.5';
+            line.style.zIndex = '-2';
+            
+            if (!compatible) {
+                line.style.borderTop = '2px dashed #f85149';
+                line.style.background = 'transparent';
+            }
+            
+            const dx = to.x - from.x;
+            const dy = to.y - from.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            line.style.left = (from.x + 160) + 'px';
+            line.style.top = (from.y + 60) + 'px';
+            line.style.width = length + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            // Добавляем подпись
+            const labelEl = document.createElement('div');
+            labelEl.style.position = 'absolute';
+            labelEl.style.left = (length / 2 - 30) + 'px';
+            labelEl.style.top = '-25px';
+            labelEl.style.fontSize = '9px';
+            labelEl.style.color = compatible ? '#3fb950' : '#f85149';
+            labelEl.style.background = 'rgba(13, 17, 23, 0.9)';
+            labelEl.style.padding = '2px 6px';
+            labelEl.style.borderRadius = '4px';
+            labelEl.style.whiteSpace = 'nowrap';
+            labelEl.style.fontWeight = compatible ? 'bold' : 'normal';
+            labelEl.textContent = label;
+            line.appendChild(labelEl);
+            
+            return line;
+        }
+
+        function initCanvas() {
+            const canvas = document.getElementById('canvas');
+            const nodeMap = {};
+            
+            // Создаем узлы
+            nodes.forEach(node => {
+                const nodeEl = createNode(node);
+                canvas.appendChild(nodeEl);
+                nodeMap[node.id] = node;
+            });
+            
+            // Создаем связи
+            nodes.forEach(node => {
+                if (node.children) {
+                    node.children.forEach(childId => {
+                        const child = nodeMap[childId];
+                        if (child) {
+                            const connection = createConnection(node, child, node.type);
+                            canvas.appendChild(connection);
+                        }
+                    });
+                }
+            });
+            
+            // Создаем линии совместимости
+            const compatibilityPairs = [
+                ['json-storage', 'sqlite-storage', true, '🔄 Гибридное хранение'],
+                ['yjs-choice', 'automerge-choice', false, '❌ Несовместимо'],
+                ['react-choice', 'vue-choice', false, '❌ Один фреймворк'],
+                ['react-choice', 'svelte-choice', false, '❌ Один фреймворк'],
+                ['vue-choice', 'svelte-choice', false, '❌ Один фреймворк'],
+                ['webworker-plugins', 'iframe-plugins', false, '❌ Разные подходы'],
+                ['uuid-v4', 'uuid-v7', false, '❌ Один формат'],
+                ['all-workers', 'search-workers', false, '❌ Разные подходы'],
+                ['markdown-entities', 'wysiwyg-editor', true, '🔄 Переключение режимов'],
+                ['virtual-scrolling', 'lazy-loading', true, '✅ Дополняют друг друга'],
+                ['crdt-refs', 'hybrid-refs', true, '🔄 Можно комбинировать'],
+                ['tantivy-search', 'lunr-search', false, '❌ Один поисковик'],
+                ['vite-choice', 'webpack-choice', false, '❌ Один бандлер'],
+                ['separate-log', 'crdt-log', true, '🔄 Можно комбинировать'],
+                ['json-schema', 'typescript-schema', true, '🔄 Дополняют друг друга'],
+                ['all-workers', 'search-workers', false, '❌ Разные подходы'],
+                ['webworker-plugins', 'iframe-plugins', false, '❌ Разные подходы'],
+                ['render-detection', 'creation-detection', true, '✅ Оба подхода вместе'],
+                ['continuous-save', 'event-save', true, '🔄 Можно комбинировать'],
+                ['any-collapse', 'list-collapse', false, '❌ Разные подходы'],
+                ['persistent-aliases', 'auto-aliases', true, '🔄 Можно комбинировать'],
+                ['native-media', 'plugin-media', false, '❌ Разные подходы'],
+                ['full-tables', 'simple-tables', false, '❌ Разные уровни']
+            ];
+            
+            compatibilityPairs.forEach(([fromId, toId, compatible, label]) => {
+                const from = nodeMap[fromId];
+                const to = nodeMap[toId];
+                if (from && to) {
+                    const line = createCompatibilityLine(from, to, compatible, label);
+                    canvas.appendChild(line);
+                }
+            });
+        }
+
+        function updateTransform() {
+            const canvas = document.getElementById('canvas');
+            canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+        }
+
+        function resetView() {
+            scale = 0.3;
+            translateX = -600;
+            translateY = -30;
+            updateTransform();
+        }
+
+        function centerView() {
+            translateX = -2000;
+            translateY = -200;
+            updateTransform();
+        }
+
+        // События
+        const viewport = document.getElementById('viewport');
+
+        viewport.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.max(0.1, Math.min(3, scale * delta));
+            
+            scale = newScale;
+            updateTransform();
+        });
+
+        viewport.addEventListener('mousedown', (e) => {
+            if (e.button === 0) {
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                viewport.classList.add('dragging');
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                translateX += deltaX;
+                translateY += deltaY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                updateTransform();
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            viewport.classList.remove('dragging');
+        });
+
+        // Инициализация
+        initCanvas();
+        updateTransform();
+    </script>
+</body>
+</html>
